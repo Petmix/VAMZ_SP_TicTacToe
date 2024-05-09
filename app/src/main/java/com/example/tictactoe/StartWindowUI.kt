@@ -147,13 +147,7 @@ fun MainWindow(
 @Composable
 fun TicTacToeAppStart(navController: NavHostController = rememberNavController())
 {
-    // Get current back stack entry
-    val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
-    val currentScreen = TTTApp.valueOf(
-        backStackEntry?.destination?.route ?: TTTApp.Start.name
-    )
-
+    val gmPl = GamePlay()
     NavHost(
         navController = navController,
         startDestination = TTTApp.Start.name,
@@ -170,22 +164,21 @@ fun TicTacToeAppStart(navController: NavHostController = rememberNavController()
         }
         composable(route = TTTApp.NewGame.name)
         {
-            val context = LocalContext.current
             NewGameWindow(
                 onCancelButtonClicked = { navigateTo(navController, TTTApp.Start.name) },
-                onNextButtonClicked = { navigateTo(navController, TTTApp.GamePlay.name) }
+                onNextButtonClicked = { navigateTo(navController, TTTApp.GamePlay.name) },
+                gamePlay = gmPl
             )
         }
         composable(route = TTTApp.GamePlay.name)
         {
             TTTScreen(
-                gamePlay = GamePlay(),
+                gamePlay = gmPl,
                 onGameEnd = { navigateTo(navController, TTTApp.Start.name) }
             )
         }
         composable(route = TTTApp.ScoreBoard.name)
         {
-            val context = LocalContext.current
             ScoreBoardWindow(
                 onBackClick = { navigateTo(navController, TTTApp.Start.name) }
             )

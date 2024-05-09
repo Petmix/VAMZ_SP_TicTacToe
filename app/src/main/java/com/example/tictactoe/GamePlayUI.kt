@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,14 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-
-val shapes = Shapes(
-    extraSmall = RoundedCornerShape(4.dp),
-    small = RoundedCornerShape(8.dp),
-    medium = RoundedCornerShape(16.dp),
-    large = RoundedCornerShape(24.dp),
-    extraLarge = RoundedCornerShape(32.dp)
-)
 
 @Composable
 fun TTTScreen(
@@ -51,15 +41,13 @@ fun TTTScreen(
 fun Header(gamePlay: GamePlay)
 {
     val image = painterResource(R.drawable.gamebackground)
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .height(2400.dp)){
+    Box()
+    {
         Image(
             painter = image,
             contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
-                .height(2400.dp),
+                .fillMaxSize(),
             contentScale = ContentScale.Crop
         )
     }
@@ -70,7 +58,7 @@ fun Header(gamePlay: GamePlay)
     )
     {
         Text(
-            text = gamePlay.getNumOfGames().toString() + "/" + gamePlay.getNumOfGamesPlayed().toString(),
+            text = gamePlay.getNumOfGamesPlayed().toString() + "/" + gamePlay.getNumOfGames().toString(),
             modifier = Modifier.padding(0.dp, 80.dp, 0.dp, 0.dp),
             color = Color.White,
             fontWeight = FontWeight.Bold,
@@ -86,40 +74,32 @@ fun Header(gamePlay: GamePlay)
         modifier = Modifier.padding(0.dp, 150.dp, 0.dp, 0.dp)
     )
     {
-        var playerBoxColor = color
-        var aiBoxColor = color
-        if (gamePlay.getPlayerTurn())
-        {
-            playerBoxColor = colorDark
-            aiBoxColor = color
-        }
-        else
-        {
-            playerBoxColor = color
-            aiBoxColor = colorDark
-        }
-
         Box(
             modifier = Modifier
                 .width(120.dp)
                 .height(90.dp)
-                .background(color = playerBoxColor, shape = shapes.medium,)
+                .background(
+                    color = if (gamePlay.getPlayerTurn()) colorDark else color,
+                    shape = shapes.medium
+                )
         )
         {
             Text(
                 text = gamePlay.getPlayer1Name(),
                 modifier = Modifier
-                    .padding(0.dp, 0.dp, 8.dp, 0.dp),
+                    .align(Alignment.TopCenter)
+                    .padding(0.dp, 5.dp, 0.dp, 0.dp),
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 24.sp
             )
 
             Text(
                 text = gamePlay.getPlayer1Score().toString(),
                 modifier = Modifier
-                    .padding(0.dp, 8.dp, 0.dp, 0.dp),
+                    .padding(50.dp, 50.dp, 0.dp, 0.dp),
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
             )
         }
 
@@ -127,23 +107,28 @@ fun Header(gamePlay: GamePlay)
             modifier = Modifier
                 .width(120.dp)
                 .height(90.dp)
-                .background(color = aiBoxColor, shape = shapes.medium)
+                .background(
+                    color = if (gamePlay.getPlayerTurn()) color else colorDark,
+                    shape = shapes.medium
+                )
         )
         {
             Text(
                 text = gamePlay.getPlayer2Name(),
                 modifier = Modifier
-                    .padding(0.dp, 0.dp, 8.dp, 0.dp),
+                    .align(Alignment.TopCenter)
+                    .padding(0.dp, 5.dp, 0.dp, 0.dp),
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 24.sp
             )
 
             Text(
                 text = gamePlay.getPlayer2Score().toString(),
                 modifier = Modifier
-                    .padding(0.dp, 8.dp, 0.dp, 0.dp),
+                    .padding(50.dp, 50.dp, 0.dp, 0.dp),
                 color = Color.White,
-                fontSize = 20.sp
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -159,14 +144,11 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
     {
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            var image = painterResource(id = R.drawable.woodenx)
-            if (!gamePlay.getPlayerTurn())
-            {
-                image = painterResource(id = R.drawable.throwrings)
-            }
-
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(0)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -180,13 +162,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(painter = image, contentDescription = null, modifier = Modifier.scale(1.6f, 1.6f))
+                GetImageFromMove(gamePlay.getMyPosition(0))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(1)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -200,13 +185,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(painter = painterResource(id = R.drawable.throwrings), contentDescription = null, modifier = Modifier.scale(1.8f, 1.8f))
+                GetImageFromMove(gamePlay.getMyPosition(1))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(2)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -220,20 +208,17 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(2))
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            var image = painterResource(id = R.drawable.woodenx)
-            if (!gamePlay.getPlayerTurn())
-            {
-                image = painterResource(id = R.drawable.throwrings)
-            }
-
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(3)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -247,13 +232,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(3))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(4)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -267,13 +255,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(4))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(5)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -287,20 +278,17 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(5))
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            var image = painterResource(id = R.drawable.woodenx)
-            if (!gamePlay.getPlayerTurn())
-            {
-                image = painterResource(id = R.drawable.throwrings)
-            }
-
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(6)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -314,13 +302,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(6))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(7)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -334,13 +325,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(7))
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
             Button(
-                onClick = {},
+                onClick = {
+                    gamePlay.setMove(8)
+                    gamePlay.goNext()
+                },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -354,8 +348,30 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-
+                GetImageFromMove(gamePlay.getMyPosition(8))
             }
         }
+    }
+}
+
+@Composable
+private fun GetImageFromMove(move: Int)
+{
+    when(move)
+    {
+        1 -> Image(
+            painter = painterResource(id = R.drawable.woodenx),
+            contentDescription = null,
+            modifier = Modifier.scale(1.6f, 1.6f)
+        )
+        2 -> Image(
+            painter = painterResource(id = R.drawable.throwrings),
+            contentDescription = null,
+            modifier = Modifier.scale(1.8f, 1.8f)
+        )
+        0 -> Image(
+            painter = painterResource(id = R.drawable.emptyimage),
+            contentDescription = null
+        )
     }
 }

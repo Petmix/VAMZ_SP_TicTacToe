@@ -10,4 +10,5 @@
     <color name="navy_blue">#20a0a0</color>
     <color name="light_blue">#dafeff</color>
     <color name="dark_navy_blue">#0e7a7a</color>
+    <color name="dark_text">#455155</color>
 </resources>
