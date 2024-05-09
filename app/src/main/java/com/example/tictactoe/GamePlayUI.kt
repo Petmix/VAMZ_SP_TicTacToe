@@ -16,6 +16,9 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -137,6 +140,9 @@ fun Header(gamePlay: GamePlay)
 @Composable
 fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 {
+    val xImage = painterResource(id = R.drawable.woodenx)
+    val oImage = painterResource(id = R.drawable.throwrings)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -144,10 +150,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
     {
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
+            val fl1 = remember { mutableFloatStateOf(0.0f) }
+            val fl2 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(0)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(0) == 0)
+                    {
+                        gamePlay.setMove(0)
+                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue = 1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -162,15 +174,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(0))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl1.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl2.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl3 = remember { mutableFloatStateOf(0.0f) }
+            val fl4 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(1)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(1) == 0)
+                    {
+                        gamePlay.setMove(1)
+                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -185,15 +216,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(1))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl3.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl4.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl5 = remember { mutableFloatStateOf(0.0f) }
+            val fl6 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(2)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(2) == 0)
+                    {
+                        gamePlay.setMove(2)
+                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -208,16 +258,35 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(2))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl5.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl6.floatValue
+                )
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
+            val fl1 = remember { mutableFloatStateOf(0.0f) }
+            val fl2 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(3)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(3) == 0)
+                    {
+                        gamePlay.setMove(3)
+                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -232,15 +301,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(3))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl1.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl2.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl3 = remember { mutableFloatStateOf(0.0f) }
+            val fl4 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(4)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(4) == 0)
+                    {
+                        gamePlay.setMove(4)
+                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -255,15 +343,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(4))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl3.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl4.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl5 = remember { mutableFloatStateOf(0.0f) }
+            val fl6 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(5)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(5) == 0)
+                    {
+                        gamePlay.setMove(5)
+                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -278,16 +385,35 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(5))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl5.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl6.floatValue
+                )
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
+            val fl1 = remember { mutableFloatStateOf(0.0f) }
+            val fl2 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(6)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(6) == 0)
+                    {
+                        gamePlay.setMove(6)
+                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -302,15 +428,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(6))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl1.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl2.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl3 = remember { mutableFloatStateOf(0.0f) }
+            val fl4 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(7)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(7) == 0)
+                    {
+                        gamePlay.setMove(7)
+                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -325,15 +470,34 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(7))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl3.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl4.floatValue
+                )
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
+            val fl5 = remember { mutableFloatStateOf(0.0f) }
+            val fl6 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    gamePlay.setMove(8)
-                    gamePlay.goNext()
+                    if (gamePlay.getMyPosition(8) == 0)
+                    {
+                        gamePlay.setMove(8)
+                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
+                            1.0f
+                        gamePlay.goNext()
+                    }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
@@ -348,30 +512,20 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                GetImageFromMove(gamePlay.getMyPosition(8))
+                Image(
+                    painter = xImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.6f, 1.6f),
+                    alpha = fl5.floatValue
+                )
+
+                Image(
+                    painter = oImage,
+                    contentDescription = null,
+                    modifier = Modifier.scale(1.8f, 1.8f),
+                    alpha = fl6.floatValue
+                )
             }
         }
-    }
-}
-
-@Composable
-private fun GetImageFromMove(move: Int)
-{
-    when(move)
-    {
-        1 -> Image(
-            painter = painterResource(id = R.drawable.woodenx),
-            contentDescription = null,
-            modifier = Modifier.scale(1.6f, 1.6f)
-        )
-        2 -> Image(
-            painter = painterResource(id = R.drawable.throwrings),
-            contentDescription = null,
-            modifier = Modifier.scale(1.8f, 1.8f)
-        )
-        0 -> Image(
-            painter = painterResource(id = R.drawable.emptyimage),
-            contentDescription = null
-        )
     }
 }
