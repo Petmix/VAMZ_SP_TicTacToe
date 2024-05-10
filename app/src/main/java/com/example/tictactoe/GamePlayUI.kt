@@ -1,5 +1,6 @@
 package com.example.tictactoe
 
+import android.webkit.ConsoleMessage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import java.io.Console
 
 @Composable
 fun TTTScreen(
@@ -82,7 +84,7 @@ fun Header(gamePlay: GamePlay)
                 .width(120.dp)
                 .height(90.dp)
                 .background(
-                    color = if (gamePlay.getPlayerTurn()) colorDark else color,
+                    color = if (gamePlay.playerTurn.value) colorDark else color,
                     shape = shapes.medium
                 )
         )
@@ -111,7 +113,7 @@ fun Header(gamePlay: GamePlay)
                 .width(120.dp)
                 .height(90.dp)
                 .background(
-                    color = if (gamePlay.getPlayerTurn()) color else colorDark,
+                    color = if (gamePlay.playerTurn.value) color else colorDark,
                     shape = shapes.medium
                 )
         )
@@ -142,6 +144,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 {
     val xImage = painterResource(id = R.drawable.woodenx)
     val oImage = painterResource(id = R.drawable.throwrings)
+    val nImage = painterResource(id = R.drawable.emptyimage)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -150,14 +153,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
     {
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            val fl1 = remember { mutableFloatStateOf(0.0f) }
-            val fl2 = remember { mutableFloatStateOf(0.0f) }
+            val f1 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(0) == 0)
                     {
                         gamePlay.setMove(0)
-                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue = 1.0f
+                        f1.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -174,32 +176,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl1.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl2.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(0) == 1) xImage else if (gamePlay.getMyPosition(0) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(0) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f1.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl3 = remember { mutableFloatStateOf(0.0f) }
-            val fl4 = remember { mutableFloatStateOf(0.0f) }
+            val f2 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(1) == 0)
                     {
                         gamePlay.setMove(1)
-                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
-                            1.0f
+                        f2.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -216,32 +212,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl3.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl4.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(1) == 1) xImage else if (gamePlay.getMyPosition(1) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(1) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f2.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl5 = remember { mutableFloatStateOf(0.0f) }
-            val fl6 = remember { mutableFloatStateOf(0.0f) }
+            val f3 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(2) == 0)
                     {
                         gamePlay.setMove(2)
-                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
-                            1.0f
+                        f3.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -258,33 +248,27 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl5.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl6.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(2) == 1) xImage else if (gamePlay.getMyPosition(2) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(2) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f3.floatValue
+                    )
+                }
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            val fl1 = remember { mutableFloatStateOf(0.0f) }
-            val fl2 = remember { mutableFloatStateOf(0.0f) }
+            val f4 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(3) == 0)
                     {
                         gamePlay.setMove(3)
-                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue =
-                            1.0f
+                        f4.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -301,32 +285,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl1.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl2.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(3) == 1) xImage else if (gamePlay.getMyPosition(3) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(3) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f4.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl3 = remember { mutableFloatStateOf(0.0f) }
-            val fl4 = remember { mutableFloatStateOf(0.0f) }
+            val f5 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(4) == 0)
                     {
                         gamePlay.setMove(4)
-                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
-                            1.0f
+                        f5.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -343,32 +321,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl3.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl4.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(4) == 1) xImage else if (gamePlay.getMyPosition(4) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(4) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f5.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl5 = remember { mutableFloatStateOf(0.0f) }
-            val fl6 = remember { mutableFloatStateOf(0.0f) }
+            val f6 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(5) == 0)
                     {
                         gamePlay.setMove(5)
-                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
-                            1.0f
+                        f6.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -385,33 +357,27 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl5.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl6.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(5) == 1) xImage else if (gamePlay.getMyPosition(5) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(5) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f6.floatValue
+                    )
+                }
             }
         }
 
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
-            val fl1 = remember { mutableFloatStateOf(0.0f) }
-            val fl2 = remember { mutableFloatStateOf(0.0f) }
+            val f7 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(6) == 0)
                     {
                         gamePlay.setMove(6)
-                        if (gamePlay.getPlayerTurn()) fl1.floatValue = 1.0f else fl2.floatValue =
-                            1.0f
+                        f7.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -428,32 +394,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl1.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl2.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(6) == 1) xImage else if (gamePlay.getMyPosition(6) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(6) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f7.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl3 = remember { mutableFloatStateOf(0.0f) }
-            val fl4 = remember { mutableFloatStateOf(0.0f) }
+            val f8 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(7) == 0)
                     {
                         gamePlay.setMove(7)
-                        if (gamePlay.getPlayerTurn()) fl3.floatValue = 1.0f else fl4.floatValue =
-                            1.0f
+                        f8.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -470,32 +430,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl3.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl4.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(7) == 1) xImage else if (gamePlay.getMyPosition(7) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(7) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f8.floatValue
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val fl5 = remember { mutableFloatStateOf(0.0f) }
-            val fl6 = remember { mutableFloatStateOf(0.0f) }
+            val f9 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
                     if (gamePlay.getMyPosition(8) == 0)
                     {
                         gamePlay.setMove(8)
-                        if (gamePlay.getPlayerTurn()) fl5.floatValue = 1.0f else fl6.floatValue =
-                            1.0f
+                        f9.floatValue = 1.0f
                         gamePlay.goNext()
                     }
                 },
@@ -512,19 +466,15 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     .height(100.dp)
             )
             {
-                Image(
-                    painter = xImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.6f, 1.6f),
-                    alpha = fl5.floatValue
-                )
-
-                Image(
-                    painter = oImage,
-                    contentDescription = null,
-                    modifier = Modifier.scale(1.8f, 1.8f),
-                    alpha = fl6.floatValue
-                )
+                Box()
+                {
+                    Image(
+                        painter = if (gamePlay.getMyPosition(8) == 1) xImage else if (gamePlay.getMyPosition(8) == 2) oImage else nImage,
+                        contentDescription = null,
+                        modifier = if (gamePlay.getMyPosition(8) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = f9.floatValue
+                    )
+                }
             }
         }
     }

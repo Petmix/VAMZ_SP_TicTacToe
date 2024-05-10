@@ -3,9 +3,12 @@ package com.example.tictactoe
 import android.app.Activity
 import android.content.Intent.getIntent
 import android.content.Intent.getIntentOld
+import android.util.Printer
 import android.widget.Button
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -13,12 +16,14 @@ import androidx.core.app.ActivityCompat.recreate
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.io.PrintStream
+import java.io.PrintWriter
 import kotlin.random.Random
 
 class GamePlay : ViewModel()
 {
     private val _uiState = MutableStateFlow(TTTState())
-    private var _playerTurn = true
+    public val playerTurn = mutableStateOf(true)
     private var _moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
     private var _multiPlayerMode = true
 
@@ -50,16 +55,11 @@ class GamePlay : ViewModel()
         }
     }
 
-    fun getPlayerTurn() : Boolean
-    {
-        return _playerTurn
-    }
-
     fun setPlayerTurn(turn: Int)
     {
-        if (turn == 0) _playerTurn = chooseRandomTurn()
-        else if (turn == 1) _playerTurn = true
-        else _playerTurn = false
+        if (turn == 0) playerTurn.value = chooseRandomTurn()
+        else if (turn == 1) playerTurn.value = true
+        else playerTurn.value = false
     }
 
     private fun chooseRandomTurn() : Boolean
@@ -69,12 +69,12 @@ class GamePlay : ViewModel()
 
     fun setMove(move: Int)
     {
-        _moves[move] = _playerTurn
+        _moves[move] = playerTurn.value
     }
 
     fun goNext()
     {
-        _playerTurn = !_playerTurn
+        playerTurn.value = !playerTurn.value
     }
 
     fun setMode(multiPlayer: Boolean)
