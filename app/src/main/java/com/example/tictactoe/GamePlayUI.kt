@@ -1,6 +1,5 @@
 package com.example.tictactoe
 
-import android.webkit.ConsoleMessage
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +17,6 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +28,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import java.io.Console
 
 @Composable
 fun TTTScreen(
@@ -54,20 +51,6 @@ fun Header(gamePlay: GamePlay)
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.Crop
-        )
-    }
-
-    Row(
-        verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.Center
-    )
-    {
-        Text(
-            text = gamePlay.getNumOfGamesPlayed().toString() + "/" + gamePlay.getNumOfGames().toString(),
-            modifier = Modifier.padding(0.dp, 80.dp, 0.dp, 0.dp),
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-            fontSize = 32.sp
         )
     }
 
@@ -146,21 +129,32 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
     val oImage = painterResource(id = R.drawable.throwrings)
     val nImage = painterResource(id = R.drawable.emptyimage)
 
+    val a1 = remember { mutableFloatStateOf(0.0f) }
+    val a2 = remember { mutableFloatStateOf(0.0f) }
+    val a3 = remember { mutableFloatStateOf(0.0f) }
+    val a4 = remember { mutableFloatStateOf(0.0f) }
+    val a5 = remember { mutableFloatStateOf(0.0f) }
+    val a6 = remember { mutableFloatStateOf(0.0f) }
+    val a7 = remember { mutableFloatStateOf(0.0f) }
+    val a8 = remember { mutableFloatStateOf(0.0f) }
+    val a9 = remember { mutableFloatStateOf(0.0f) }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     )
     {
-        Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
+        Row(modifier = Modifier.padding(0.dp, 80.dp, 0.dp, 0.dp))
         {
-            val f1 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(0) == 0)
+                    if (gamePlay.moves[0] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(0)
-                        f1.floatValue = 1.0f
+                        a1.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -179,24 +173,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(0) == 1) xImage else if (gamePlay.getMyPosition(0) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[0] == true) xImage else if (gamePlay.moves[0] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(0) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f1.floatValue
+                        modifier = if (gamePlay.moves[0] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a1.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f2 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(1) == 0)
+                    if (gamePlay.moves[1] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(1)
-                        f2.floatValue = 1.0f
+                        a2.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -215,24 +210,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(1) == 1) xImage else if (gamePlay.getMyPosition(1) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[1] == true) xImage else if (gamePlay.moves[1] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(1) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f2.floatValue
+                        modifier = if (gamePlay.moves[1] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a2.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f3 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(2) == 0)
+                    if (gamePlay.moves[2] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(2)
-                        f3.floatValue = 1.0f
+                        a3.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -251,25 +247,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(2) == 1) xImage else if (gamePlay.getMyPosition(2) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[2] == true) xImage else if (gamePlay.moves[2] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(2) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f3.floatValue
+                        modifier = if (gamePlay.moves[2] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a3.floatValue
                     )
                 }
             }
         }
 
-        Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
+        Row(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp))
         {
-            val f4 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(3) == 0)
+                    if (gamePlay.moves[3] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(3)
-                        f4.floatValue = 1.0f
+                        a4.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -288,24 +285,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(3) == 1) xImage else if (gamePlay.getMyPosition(3) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[3] == true) xImage else if (gamePlay.moves[3] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(3) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f4.floatValue
+                        modifier = if (gamePlay.moves[3] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a4.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f5 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(4) == 0)
+                    if (gamePlay.moves[4] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(4)
-                        f5.floatValue = 1.0f
+                        a5.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -324,24 +322,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(4) == 1) xImage else if (gamePlay.getMyPosition(4) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[4] == true) xImage else if (gamePlay.moves[4] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(4) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f5.floatValue
+                        modifier = if (gamePlay.moves[4] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a5.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f6 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(5) == 0)
+                    if (gamePlay.moves[5] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(5)
-                        f6.floatValue = 1.0f
+                        a6.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -360,25 +359,26 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(5) == 1) xImage else if (gamePlay.getMyPosition(5) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[5] == true) xImage else if (gamePlay.moves[5] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(5) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f6.floatValue
+                        modifier = if (gamePlay.moves[5] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a6.floatValue
                     )
                 }
             }
         }
 
-        Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
+        Row(modifier = Modifier.padding(0.dp, 20.dp, 0.dp, 0.dp))
         {
-            val f7 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(6) == 0)
+                    if (gamePlay.moves[6] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(6)
-                        f7.floatValue = 1.0f
+                        a7.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -397,24 +397,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(6) == 1) xImage else if (gamePlay.getMyPosition(6) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[6] == true) xImage else if (gamePlay.moves[6] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(6) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f7.floatValue
+                        modifier = if (gamePlay.moves[6] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a7.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f8 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(7) == 0)
+                    if (gamePlay.moves[7] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(7)
-                        f8.floatValue = 1.0f
+                        a8.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -433,24 +434,25 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(7) == 1) xImage else if (gamePlay.getMyPosition(7) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[7] == true) xImage else if (gamePlay.moves[7] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(7) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f8.floatValue
+                        modifier = if (gamePlay.moves[7] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a8.floatValue
                     )
                 }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
 
-            val f9 = remember { mutableFloatStateOf(0.0f) }
             Button(
                 onClick = {
-                    if (gamePlay.getMyPosition(8) == 0)
+                    if (gamePlay.moves[8] == null || !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(8)
-                        f9.floatValue = 1.0f
+                        a9.floatValue = 1.0f
+                        gamePlay.checkEnd()
                         gamePlay.goNext()
+                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -469,12 +471,85 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.getMyPosition(8) == 1) xImage else if (gamePlay.getMyPosition(8) == 2) oImage else nImage,
+                        painter = if (gamePlay.moves[8] == true) xImage else if (gamePlay.moves[8] == false) oImage else nImage,
                         contentDescription = null,
-                        modifier = if (gamePlay.getMyPosition(8) == 2) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = f9.floatValue
+                        modifier = if (gamePlay.moves[8] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
+                        alpha = a9.floatValue
                     )
                 }
+            }
+        }
+
+        Row(
+            verticalAlignment = Alignment.Bottom,
+            modifier = Modifier
+                .padding(0.dp, 80.dp, 0.dp, 0.dp)
+        )
+        {
+            Button(
+                onClick = {
+                    onGameEnd()
+                },
+                colors = ButtonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    disabledContentColor = Color.White
+                ),
+                modifier = Modifier
+                    .background(
+                        color = Color.White,
+                        shape = shapes.extraLarge
+                    )
+                    .width(140.dp)
+                    .height(60.dp)
+            )
+            {
+                Text(
+                    text = "Exit",
+                    color = colorResource(id = R.color.dark_navy_blue),
+                    fontSize = 24.sp
+                )
+            }
+
+            Spacer(modifier = Modifier.width(30.dp))
+
+            Button(
+                onClick = {
+                    if (gamePlay.gameOver.value)
+                    {
+                        gamePlay.playAgain()
+                        a1.floatValue = 0.0f
+                        a2.floatValue = 0.0f
+                        a3.floatValue = 0.0f
+                        a4.floatValue = 0.0f
+                        a5.floatValue = 0.0f
+                        a6.floatValue = 0.0f
+                        a7.floatValue = 0.0f
+                        a8.floatValue = 0.0f
+                        a9.floatValue = 0.0f
+                    }
+                },
+                colors = ButtonColors(
+                    containerColor = colorResource(id = R.color.navy_blue),
+                    contentColor = colorResource(id = R.color.navy_blue),
+                    disabledContainerColor = colorResource(id = R.color.navy_blue),
+                    disabledContentColor = colorResource(id = R.color.navy_blue)
+                ),
+                modifier = Modifier
+                    .background(
+                        color = colorResource(id = R.color.navy_blue),
+                        shape = shapes.extraLarge
+                    )
+                    .width(140.dp)
+                    .height(60.dp)
+            )
+            {
+                Text(
+                    text = "Again",
+                    color = Color.White,
+                    fontSize = 24.sp
+                )
             }
         }
     }

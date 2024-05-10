@@ -1,9 +1,9 @@
 <resources>
     <string name="app_name">TicTacToe</string>
     <string name="new_game">New Game</string>
+    <string name="mp_new_game">Multiplayer New Game</string>
     <string name="game_play">Game Play</string>
     <string name="score">Score Board</string>
 
     <string name="name">Name</string>
-    <string name="num_of_games">Number Of Games</string>
 </resources>

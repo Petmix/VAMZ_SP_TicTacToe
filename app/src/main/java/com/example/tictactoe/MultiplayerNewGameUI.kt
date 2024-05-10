@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun NewGameWindow(
+fun MultiplayerNewGameWindow(
     onCancelButtonClicked: () -> Unit = {},
     onNextButtonClicked: () -> Unit = {},
     gamePlay: GamePlay
@@ -48,7 +48,6 @@ fun NewGameWindow(
     var p1Name by remember { mutableStateOf("") }
     var p2Name by remember { mutableStateOf("") }
     var selectedButton by remember { mutableIntStateOf(0) }
-    var difficultySelected by remember { mutableIntStateOf(0) }
 
     Box()
     {
@@ -79,7 +78,7 @@ fun NewGameWindow(
         {
             TextField(
                 value = p1Name,
-                onValueChange = { if (p2Name == "") p1Name = it },
+                onValueChange = { p1Name = it },
                 modifier = Modifier
                     .padding(30.dp, 60.dp, 0.dp, 0.dp)
                     .width(320.dp),
@@ -93,7 +92,7 @@ fun NewGameWindow(
 
             TextField(
                 value = p2Name,
-                onValueChange = { if (p1Name == "") p2Name = it },
+                onValueChange = { p2Name = it },
                 modifier = Modifier
                     .padding(30.dp, 140.dp, 0.dp, 0.dp)
                     .width(320.dp),
@@ -213,82 +212,6 @@ fun NewGameWindow(
             Row(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(0.dp, 260.dp, 0.dp, 0.dp)
-            )
-            {
-                val colorNotSelected = colorResource(id = R.color.navy_blue)
-                val colorSelected = colorResource(id = R.color.dark_navy_blue)
-                Button(
-                    onClick = { difficultySelected = 1 },
-                    colors = ButtonColors(containerColor = if (difficultySelected == 1) colorSelected else colorNotSelected,
-                        contentColor = if (difficultySelected == 1) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (difficultySelected == 1) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(90.dp)
-                        .height(60.dp)
-                )
-                {
-                    Text(
-                        text = "Easy",
-                        color = Color.White,
-                        fontSize = 19.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                Button(
-                    onClick = { difficultySelected = 2 },
-                    colors = ButtonColors(containerColor = if (difficultySelected == 2) colorSelected else colorNotSelected,
-                        contentColor = if (difficultySelected == 2) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (difficultySelected == 2) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(120.dp)
-                        .height(60.dp)
-                )
-                {
-                    Text(
-                        text = "Medium",
-                        color = Color.White,
-                        fontSize = 19.sp
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                Button(
-                    onClick = {  difficultySelected = 3 },
-                    colors = ButtonColors(containerColor = if (difficultySelected == 3) colorSelected else colorNotSelected,
-                        contentColor = if (difficultySelected == 3) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (difficultySelected == 3) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(90.dp)
-                        .height(60.dp)
-                )
-                {
-                    Text(
-                        text = "Hard",
-                        color = Color.White,
-                        fontSize = 19.sp
-                    )
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.Center)
                     .padding(10.dp, 420.dp, 0.dp, 0.dp)
             )
             {
@@ -317,13 +240,12 @@ fun NewGameWindow(
 
                 Button(
                     onClick = {
-                        if ((p1Name != "" || p2Name != "") && selectedButton != 0 && difficultySelected != 0)
+                        if (p1Name != "" && p2Name != "" && selectedButton != 0)
                         {
                             gamePlay.resetGame()
                             gamePlay.setPlayer1Name(p1Name)
                             gamePlay.setPlayer2Name(p2Name)
-                            gamePlay.difficulty.intValue = difficultySelected
-                            gamePlay.multiPlayerMode.value = false
+                            gamePlay.multiPlayerMode.value = true
                             gamePlay.setPlayerTurn(selectedButton - 1)
                             onNextButtonClicked()
                         }

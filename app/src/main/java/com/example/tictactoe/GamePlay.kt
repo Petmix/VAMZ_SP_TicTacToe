@@ -1,65 +1,212 @@
 package com.example.tictactoe
 
-import android.app.Activity
-import android.content.Intent.getIntent
-import android.content.Intent.getIntentOld
-import android.util.Printer
-import android.widget.Button
-import androidx.compose.foundation.Image
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.core.app.ActivityCompat.recreate
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import java.io.PrintStream
-import java.io.PrintWriter
 import kotlin.random.Random
 
 class GamePlay : ViewModel()
 {
     private val _uiState = MutableStateFlow(TTTState())
-    public val playerTurn = mutableStateOf(true)
-    private var _moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
-    private var _multiPlayerMode = true
+    val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
+    val playerTurn = mutableStateOf(true)
+    var multiPlayerMode = mutableStateOf(true)
+    val gameOver = mutableStateOf(false)
+    var difficulty = mutableIntStateOf(2)
 
     init {
         _uiState.value = TTTState()
     }
 
-    fun getMyPosition(pos: Int) : Int
-    {
-        if (_moves[pos] == true) return 1
-        if (_moves[pos] == false) return 2
-        return 0
-    }
-
     fun resetGame()
     {
         _uiState.value = TTTState()
-        for (i in 0..< _moves.size)
+        for (i in 0..< moves.size)
         {
-            _moves[i] = null
+            if (moves[i] != null)
+            {
+                moves[i] = null
+            }
         }
+        gameOver.value = false
     }
 
     fun playAgain()
     {
-        for (i in 0..< _moves.size)
+        for (i in 0..< moves.size)
         {
-            _moves[i] = null
+            if (moves[i] != null)
+            {
+                moves[i] = null
+            }
         }
+        gameOver.value = false
+    }
+
+    fun moveAI()
+    {
+        when (difficulty.intValue)
+        {
+            1 -> moveAIEasy()
+            2 -> moveAIMedium()
+            3 -> moveAIHard()
+        }
+    }
+
+    private fun moveAIEasy()
+    {
+        for (i in 0..8)
+        {
+            if (moves[i] == null) moves[i] = playerTurn.value
+            checkEnd()
+            goNext()
+        }
+    }
+
+    private fun moveAIMedium()
+    {
+        val nulls = mutableListOf<Int>()
+        var index = 0
+        for (i in 0..8)
+        {
+            if (moves[i] == null)
+            {
+                nulls.add(index, i)
+                index++
+            }
+        }
+        moves[nulls[Random.nextInt(nulls.size)]] = playerTurn.value
+        checkEnd()
+        goNext()
+    }
+
+    private fun moveAIHard()
+    {
+        val turn = !playerTurn.value
+        val aiTurn = playerTurn.value
+
+        if (moves[0] == turn && moves[1] == turn) moves[2] = aiTurn
+        else if (moves[1] == turn && moves[2] == turn) moves[0] = aiTurn
+        else if (moves[3] == turn && moves[4] == turn) moves[5] = aiTurn
+        else if (moves[4] == turn && moves[5] == turn) moves[3] = aiTurn
+        else if (moves[6] == turn && moves[7] == turn) moves[8] = aiTurn
+        else if (moves[7] == turn && moves[8] == turn) moves[6] = aiTurn
+        else if (moves[0] == turn && moves[4] == turn) moves[8] = aiTurn
+        else if (moves[4] == turn && moves[8] == turn) moves[0] = aiTurn
+        else if (moves[2] == turn && moves[4] == turn) moves[6] = aiTurn
+        else if (moves[4] == turn && moves[6] == turn) moves[2] = aiTurn
+        else
+        {
+            if (moves[0] == aiTurn && moves[1] == aiTurn) moves[2] = aiTurn
+            else if (moves[1] == aiTurn && moves[2] == aiTurn) moves[0] = aiTurn
+            else if (moves[3] == aiTurn && moves[4] == aiTurn) moves[5] = aiTurn
+            else if (moves[4] == aiTurn && moves[5] == aiTurn) moves[8] = aiTurn
+            else if (moves[7] == aiTurn && moves[8] == aiTurn) moves[6] = aiTurn
+            else if (moves[0] == aiTurn && moves[4] == aiTurn) moves[8] = aiTurn
+            else if (moves[4] == aiTurn && moves[8] == aiTurn) moves[0] = aiTurn
+            else if (moves[2] == aiTurn && moves[4] == aiTurn) moves[6] = aiTurn
+            else if (moves[4] == aiTurn && moves[6] == aiTurn) moves[2] = aiTurn
+            else
+            {
+                val corners = mutableListOf<Int>()
+                var index = 5
+                corners.add(0, 0)
+                corners.add(1, 2)
+                corners.add(2, 6)
+                corners.add(3, 8)
+                for (i in 0..3)
+                {
+                    if (moves[corners[i]] == aiTurn)
+                    {
+                        index = i
+                        break
+                    }
+                }
+
+                if (index != 5)
+                {
+                    val nulls = mutableListOf<Int>()
+                    var index2 = 0
+                    for (i in 0..3)
+                    {
+                        if (i != index)
+                        {
+                            if (moves[corners[i]] == null)
+                            {
+                                nulls.add(index2, corners[i])
+                                index2++
+                            }
+                        }
+                    }
+
+                    if (nulls.size != 0)
+                    {
+                        moves[nulls[Random.nextInt(nulls.size)]] = aiTurn
+                    }
+                }
+                else
+                {
+                    val sides = mutableListOf<Int>()
+                    var index3 = 5
+                    sides.add(0, 0)
+                    sides.add(1, 2)
+                    sides.add(2, 6)
+                    sides.add(3, 8)
+                    for (i in 0..3)
+                    {
+                        if (moves[sides[i]] == aiTurn)
+                        {
+                            index3 = i
+                            break
+                        }
+                    }
+
+                    if (index3 != 5) {
+                        val nulls2 = mutableListOf<Int>()
+                        var index4 = 0
+                        for (i in 0..3) {
+                            if (i != index3) {
+                                if (moves[sides[i]] == null) {
+                                    nulls2.add(index4, sides[i])
+                                    index4++
+                                }
+                            }
+                        }
+
+                        if (nulls2.size != 0) {
+                            moves[nulls2[Random.nextInt(nulls2.size)]] = aiTurn
+                        }
+                    }
+                    else
+                    {
+                        val nulls3 = mutableListOf<Int>()
+                        var index5 = 0
+                        for (i in 0..8)
+                        {
+                            if (moves[i] == null)
+                            {
+                                nulls3.add(index5, i)
+                                index5++
+                            }
+                        }
+                        moves[nulls3[Random.nextInt(nulls3.size)]] = playerTurn.value
+                    }
+                }
+            }
+        }
+        checkEnd()
+        goNext()
     }
 
     fun setPlayerTurn(turn: Int)
     {
-        if (turn == 0) playerTurn.value = chooseRandomTurn()
-        else if (turn == 1) playerTurn.value = true
-        else playerTurn.value = false
+        when (turn)
+        {
+            0 -> playerTurn.value = chooseRandomTurn()
+            1 -> playerTurn.value = true
+            2 -> playerTurn.value = false
+        }
     }
 
     private fun chooseRandomTurn() : Boolean
@@ -69,17 +216,12 @@ class GamePlay : ViewModel()
 
     fun setMove(move: Int)
     {
-        _moves[move] = playerTurn.value
+        moves[move] = playerTurn.value
     }
 
     fun goNext()
     {
         playerTurn.value = !playerTurn.value
-    }
-
-    fun setMode(multiPlayer: Boolean)
-    {
-        _multiPlayerMode = multiPlayer
     }
 
     fun getPlayer1Name() : String
@@ -89,7 +231,14 @@ class GamePlay : ViewModel()
 
     fun setPlayer1Name(name: String)
     {
-        _uiState.value.player1Name = name
+        if (multiPlayerMode.value)
+        {
+            if (name == "") _uiState.value.player1Name = "AI"
+        }
+        else
+        {
+            _uiState.value.player1Name = name
+        }
     }
 
     fun getPlayer2Name() : String
@@ -99,7 +248,14 @@ class GamePlay : ViewModel()
 
     fun setPlayer2Name(name: String)
     {
-        _uiState.value.player2Name = name
+        if (multiPlayerMode.value)
+        {
+            if (name == "") _uiState.value.player2Name = "AI"
+        }
+        else
+        {
+            _uiState.value.player2Name = name
+        }
     }
 
     fun getPlayer1Score() : Int
@@ -107,7 +263,7 @@ class GamePlay : ViewModel()
         return _uiState.value.player1Score
     }
 
-    fun addScoreToP1()
+    private fun addScoreToP1()
     {
         _uiState.value.player1Score += 1
     }
@@ -117,52 +273,30 @@ class GamePlay : ViewModel()
         return _uiState.value.player2Score
     }
 
-    fun addScoreToP2()
+    private fun addScoreToP2()
     {
         _uiState.value.player2Score += 1
     }
 
-    fun getNumOfGames() : Int
-    {
-        return _uiState.value.numOfGames
-    }
 
-    fun setNumOfGames(num: Int)
+    fun checkEnd()
     {
-        _uiState.value.numOfGames = num
-    }
-
-    fun getNumOfGamesPlayed() : Int
-    {
-        return _uiState.value.numOfGamesPlayed
-    }
-
-    private fun addGamePlayed()
-    {
-        _uiState.value.numOfGamesPlayed += 1
-    }
-
-    /*fun checkEnd()
-    {
-        when(whoWon())
+        val won = whoWon()
+        if (won == 1) addScoreToP1() else if (won == 2) addScoreToP2()
+        if (won > 0)
         {
-            0 ->
+            gameOver.value = true
         }
-    }*/
+    }
 
     private fun whoWon() : Int
     {
         when(checkGameOver())
         {
-            1 -> if (_moves[0] == true) return 1 else return 2
-            2 -> if (_moves[3] == true) return 1 else return 2
-            3 -> if (_moves[6] == true) return 1 else return 2
-            4 -> if (_moves[0] == true) return 1 else return 2
-            5 -> if (_moves[1] == true) return 1 else return 2
-            6 -> if (_moves[2] == true) return 1 else return 2
-            7 -> if (_moves[0] == true) return 1 else return 2
-            8 -> if (_moves[2] == true) return 1 else return 2
-            9 -> return 3
+            1 -> if (moves[0] == true) return 1 else if (moves[0] == false) return 2
+            2 -> if (moves[4] == true) return 1 else if (moves[4] == false) return 2
+            3 -> if (moves[8] == true) return 1 else if (moves[8] == false) return 2
+            4 -> return 3
         }
 
         return 0
@@ -170,21 +304,21 @@ class GamePlay : ViewModel()
 
     private fun checkGameOver() : Int
     {
-        if (_moves[0] == _moves[1] == _moves[2]) return 1
-        if (_moves[3] == _moves[4] == _moves[5]) return 2
-        if (_moves[6] == _moves[7] == _moves[8]) return 3
+        if (moves[0] == moves[1] && moves[1] == moves[2] && moves[0] != null) return 1
+        if (moves[3] == moves[4] && moves[4] == moves[5] && moves[3] != null) return 2
+        if (moves[6] == moves[7] && moves[7] == moves[8] && moves[6] != null) return 3
 
-        if (_moves[0] == _moves[3] == _moves[6]) return 4
-        if (_moves[1] == _moves[4] == _moves[7]) return 5
-        if (_moves[2] == _moves[5] == _moves[8]) return 6
+        if (moves[0] == moves[3] && moves[3] == moves[6] && moves[0] != null) return 1
+        if (moves[1] == moves[4] && moves[4] == moves[7] && moves[1] != null) return 2
+        if (moves[2] == moves[5] && moves[5] == moves[8] && moves[2] != null) return 3
 
-        if (_moves[0] == _moves[4] == _moves[8]) return 7
-        if (_moves[2] == _moves[4] == _moves[6]) return 8
+        if (moves[0] == moves[4] && moves[4] == moves[8] && moves[0] != null) return 1
+        if (moves[2] == moves[4] && moves[4] == moves[6] && moves[2] != null) return 2
 
-        for (i in 0..< _moves.size)
+        for (i in 0..< moves.size)
         {
-            if (_moves[i] == null) return 0
-            else if (_moves[i] != null && i == _moves.size - 1) return 9
+            if (moves[i] == null) return 0
+            else if (moves[i] != null && i == moves.size - 1) return 4
         }
 
         return 0

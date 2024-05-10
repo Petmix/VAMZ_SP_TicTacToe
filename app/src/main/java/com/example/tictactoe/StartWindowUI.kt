@@ -26,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -38,13 +39,15 @@ enum class TTTApp(@StringRes val title: Int)
 {
     Start(title = R.string.app_name),
     NewGame(title = R.string.new_game),
+    MultiplayerNewGame(title = R.string.mp_new_game),
     GamePlay(title = R.string.game_play),
     ScoreBoard(title = R.string.score)
 }
 
 @Composable
 fun MainWindow(
-    onSingleOrMultiPlayerClick: () -> Unit = {},
+    onSinglePlayerClick: () -> Unit = {},
+    onMultiPlayerClick: () -> Unit = {},
     onScoreBoardClick: () -> Unit = {}
 )
 {
@@ -68,7 +71,7 @@ fun MainWindow(
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
             Button(
-                onClick = { onSingleOrMultiPlayerClick() },
+                onClick = { onSinglePlayerClick() },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue), disabledContainerColor = colorResource(id = R.color.navy_blue),
                     disabledContentColor = colorResource(id = R.color.navy_blue)
@@ -93,7 +96,7 @@ fun MainWindow(
         Row(modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 30.dp))
         {
             Button(
-                onClick = { onSingleOrMultiPlayerClick() },
+                onClick = { onMultiPlayerClick() },
                 colors = ButtonColors(
                     containerColor = colorResource(id = R.color.navy_blue),
                     contentColor = colorResource(id = R.color.navy_blue),
@@ -158,13 +161,22 @@ fun TicTacToeAppStart(navController: NavHostController = rememberNavController()
         composable(route = TTTApp.Start.name)
         {
             MainWindow(
-                onSingleOrMultiPlayerClick = { navigateTo(navController, TTTApp.NewGame.name) },
+                onSinglePlayerClick = { navigateTo(navController, TTTApp.NewGame.name) },
+                onMultiPlayerClick = { navigateTo(navController, TTTApp.MultiplayerNewGame.name) },
                 onScoreBoardClick = { navigateTo(navController, TTTApp.ScoreBoard.name) }
             )
         }
         composable(route = TTTApp.NewGame.name)
         {
             NewGameWindow(
+                onCancelButtonClicked = { navigateTo(navController, TTTApp.Start.name) },
+                onNextButtonClicked = { navigateTo(navController, TTTApp.GamePlay.name) },
+                gamePlay = gmPl
+            )
+        }
+        composable(route = TTTApp.MultiplayerNewGame.name)
+        {
+            MultiplayerNewGameWindow(
                 onCancelButtonClicked = { navigateTo(navController, TTTApp.Start.name) },
                 onNextButtonClicked = { navigateTo(navController, TTTApp.GamePlay.name) },
                 gamePlay = gmPl
