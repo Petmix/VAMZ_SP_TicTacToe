@@ -26,7 +26,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -145,8 +144,9 @@ fun MainWindow(
 }
 
 @Composable
-fun TicTacToeAppStart(navController: NavHostController = rememberNavController(), gmPl: GamePlay = viewModel(factory = GamePlay.factory))
+fun TicTacToeAppStart(navController: NavHostController = rememberNavController()) //gmPl: GamePlay = viewModel(factory = GamePlay.factory)
 {
+    val gmPl = GamePlay()
     NavHost(
         navController = navController,
         startDestination = TTTApp.Start.name,

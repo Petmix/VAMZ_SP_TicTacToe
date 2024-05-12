@@ -3,19 +3,10 @@ package com.example.tictactoe
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Date
 import kotlin.random.Random
 
-class GamePlay(val gamesDao: GamesDao) : ViewModel()
+class GamePlay() : ViewModel()
 {
     private val _uiState = MutableStateFlow(TTTState())
     val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
@@ -28,7 +19,7 @@ class GamePlay(val gamesDao: GamesDao) : ViewModel()
         _uiState.value = TTTState()
     }
 
-    companion object {
+    /*companion object {
         val factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as MainApplication)
@@ -53,7 +44,7 @@ class GamePlay(val gamesDao: GamesDao) : ViewModel()
             itemList = items
         }
         return itemList
-    }
+    }*/
 
     fun resetGame()
     {
@@ -465,7 +456,7 @@ class GamePlay(val gamesDao: GamesDao) : ViewModel()
         return 0
     }
 
-    fun saveToDatabase(coroutineScope: CoroutineScope)
+    /*fun saveToDatabase(coroutineScope: CoroutineScope)
     {
         val dateTime = toDateAndTime(Date())
         val both = dateTime.split(' ')
@@ -480,5 +471,5 @@ class GamePlay(val gamesDao: GamesDao) : ViewModel()
     {
         val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
         return sdf.format(date)
-    }
+    }*/
 }

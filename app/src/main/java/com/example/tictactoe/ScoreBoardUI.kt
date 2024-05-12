@@ -2,62 +2,94 @@ package com.example.tictactoe
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun ScoreBoardWindow(onBackClick: () -> Unit, gamePlay: GamePlay)
 {
     val image = painterResource(R.drawable.scoreboardbackground)
-    Box(){
-        Image(
-            painter = image,
-            contentDescription = null,
-            modifier = Modifier
-                .fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-    }
+    Box(
+        modifier = Modifier
+            .width(500.dp)
+            .height(850.dp)
+            .background(color = colorResource(id = R.color.blue))
+    )
+    {}
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier
+            .padding(10.dp, 10.dp, 0.dp, 0.dp)
     )
     {
-        Row(
-            verticalAlignment = Alignment.Top,
+        Button(
+            onClick = { onBackClick() },
+            colors = ButtonColors(
+                containerColor = colorResource(id = R.color.navy_blue),
+                contentColor = colorResource(id = R.color.navy_blue),
+                disabledContentColor = colorResource(id = R.color.navy_blue),
+                disabledContainerColor = colorResource(id = R.color.navy_blue)
+            ),
+            modifier = Modifier
+                .background(
+                    color = colorResource(id = R.color.navy_blue),
+                    shape = shapes.extraLarge
+                )
+                .width(60.dp)
+                .height(60.dp)
         )
         {
             Image(
-                painter = painterResource(id = R.drawable.scoreboardtext),
+                painter = painterResource(id = R.drawable.whiteback),
                 contentDescription = null,
                 modifier = Modifier
-                    .padding(0.dp, 30.dp, 10.dp, 0.dp)
+                    .scale(2.2f)
             )
         }
+    }
+
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Center
+    )
+    {
+        Image(
+            painter = painterResource(id = R.drawable.scoreboardtext),
+            contentDescription = null,
+            modifier = Modifier
+                .padding(0.dp, 30.dp, 10.dp, 0.dp)
+        )
     }
 
     GamesList(gamePlay)
@@ -69,25 +101,35 @@ fun GamesList(gamePlay: GamePlay)
     val coroutineScope = rememberCoroutineScope()
     //val games = remember { gamePlay.getListFromDao(coroutineScope) }
     val games = remember { DataProvider.gameList }
-    Box(
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .background(
-                color = colorResource(id = R.color.light_blue),
-                shape = shapes.medium
-            )
-            .width(380.dp)
-            .height(820.dp)
-            .padding(0.dp ,50.dp, 0.dp, 0.dp)
+            .width(280.dp)
+            .height(450.dp)
+            .padding(0.dp, 70.dp, 0.dp, 0.dp)
     )
     {
-        LazyColumn(
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-            userScrollEnabled = true
+        Box(
+            modifier = Modifier
+                .background(
+                    color = colorResource(id = R.color.light_blue),
+                    shape = shapes.medium
+                )
         )
         {
-            items(count = games.size)
+            LazyColumn(
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                userScrollEnabled = true,
+                modifier = Modifier
+                    .width(400.dp)
+                    .height(800.dp)
+            )
             {
-                GamesItem(list = games, index = it)
+                items(count = games.size)
+                {
+                    GamesItem(list = games, index = it)
+                }
             }
         }
     }
@@ -97,10 +139,17 @@ fun GamesList(gamePlay: GamePlay)
 fun GamesItem(list: List<TTTState>, index: Int)
 {
     Card(
+        colors = CardColors(
+            containerColor = colorResource(id = R.color.light_yellow),
+            contentColor = colorResource(id = R.color.light_yellow),
+            disabledContainerColor = colorResource(id = R.color.light_yellow),
+            disabledContentColor = colorResource(id = R.color.light_yellow)
+        ),
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 8.dp)
-            .fillMaxWidth()
-            .background(color = colorResource(id = R.color.light_blue)),
+            .background(color = colorResource(id = R.color.light_yellow))
+            .width(380.dp)
+            .height(180.dp),
         elevation = CardDefaults.cardElevation(2.dp),
         shape = RoundedCornerShape(corner = CornerSize(16.dp))
     )
@@ -108,45 +157,137 @@ fun GamesItem(list: List<TTTState>, index: Int)
         Row {
 
             Column(
-                horizontalAlignment = Alignment.Start,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(16.dp)
-                    .fillMaxWidth()
                     .align(Alignment.CenterVertically)
             )
             {
-                Text(
-                    text = list[index].player1Name,
-                    style = typography.headlineMedium,
-                    color = colorResource(id = R.color.dark_navy_blue)
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.Start
                 )
+                {
+                    Text(
+                        text = list[index].player1Name,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
 
-                Text(
-                    text = list[index].player1Score.toString(),
-                    style = typography.headlineSmall,
-                    color = colorResource(id = R.color.dark_navy_blue)
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start
                 )
+                {
+                    Text(
+                        text = "vs",
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Start
+                )
+                {
+                    Text(
+                        text = list[index].player2Name,
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
             }
 
             Column(
-                horizontalAlignment = Alignment.End,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp, 0.dp, 10.dp)
                     .align(Alignment.CenterVertically)
             )
             {
-                Text(
-                    text = list[index].player2Name,
-                    style = typography.headlineMedium,
-                    color = colorResource(id = R.color.dark_navy_blue)
+                Row(
+                    verticalAlignment = Alignment.Top
                 )
+                {
+                    Image(
+                        painter = painterResource(id = R.drawable.woodenx),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .scale(0.8f)
+                    )
+                }
 
-                Text(
-                    text = list[index].player2Score.toString(),
-                    style = typography.headlineSmall,
-                    color = colorResource(id = R.color.dark_navy_blue)
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                Row(
+                    verticalAlignment = Alignment.Bottom
                 )
+                {
+                    Image(
+                        painter = painterResource(id = R.drawable.throwrings),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .scale(0.9f)
+                    )
+                }
+            }
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(40.dp, 10.dp, 0.dp, 10.dp)
+                    .align(Alignment.CenterVertically)
+            )
+            {
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.End
+                )
+                {
+                    Text(
+                        text = list[index].date,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.End
+                )
+                {
+                    Text(
+                        text = list[index].time,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
+
+                Spacer(modifier = Modifier.padding(10.dp))
+
+                Row(
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.End
+                )
+                {
+                    Text(
+                        text = list[index].player1Score.toString() + ":" + list[index].player2Score.toString(),
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = colorResource(id = R.color.dark_text)
+                    )
+                }
             }
         }
     }

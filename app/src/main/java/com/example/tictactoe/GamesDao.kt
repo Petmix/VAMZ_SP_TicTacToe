@@ -1,6 +1,6 @@
 package com.example.tictactoe
 
-import androidx.room.Dao
+/*import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -18,4 +18,4 @@ interface GamesDao
 
     @Query("SELECT * from games ORDER BY id DESC")
     fun getAllGames(): Flow<List<TTTState>>
-}
+}*/
