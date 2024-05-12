@@ -3,10 +3,19 @@ package com.example.tictactoe
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 import kotlin.random.Random
 
-class GamePlay : ViewModel()
+class GamePlay(val gamesDao: GamesDao) : ViewModel()
 {
     private val _uiState = MutableStateFlow(TTTState())
     val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
@@ -17,6 +26,33 @@ class GamePlay : ViewModel()
 
     init {
         _uiState.value = TTTState()
+    }
+
+    companion object {
+        val factory : ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as MainApplication)
+                GamePlay(application.database.gamesDao())
+            }
+        }
+    }
+
+    fun getListFromDao(coroutineScope: CoroutineScope) : List<TTTState>
+    {
+        var gamesList: List<TTTState> = emptyList()
+        coroutineScope.launch {
+            gamesList = getListFromFlow(gamesDao.getAllGames())
+        }
+        return gamesList
+    }
+
+    private suspend fun getListFromFlow(flowList: Flow<List<TTTState>>) : List<TTTState>
+    {
+        var itemList: List<TTTState> = emptyList()
+        flowList.collect { items ->
+            itemList = items
+        }
+        return itemList
     }
 
     fun resetGame()
@@ -427,5 +463,22 @@ class GamePlay : ViewModel()
         }
 
         return 0
+    }
+
+    fun saveToDatabase(coroutineScope: CoroutineScope)
+    {
+        val dateTime = toDateAndTime(Date())
+        val both = dateTime.split(' ')
+        _uiState.value.date = both[0]
+        _uiState.value.time = both[1]
+        coroutineScope.launch{
+            gamesDao.insertGame(_uiState.value)
+        }
+    }
+
+    private fun toDateAndTime(date: Date) : String
+    {
+        val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
+        return sdf.format(date)
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -141,6 +142,7 @@ fun Header(gamePlay: GamePlay)
 @Composable
 fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 {
+    val coroutineScope = rememberCoroutineScope()
     val xImage = painterResource(id = R.drawable.woodenx)
     val oImage = painterResource(id = R.drawable.throwrings)
     val nImage = painterResource(id = R.drawable.emptyimage)
@@ -670,7 +672,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     {
                         gamePlay.addNumOfGamesPlayed()
                     }
-                    // Save TTTState to database
+                    gamePlay.saveToDatabase(coroutineScope)
                     onGameEnd()
                 },
                 colors = ButtonColors(

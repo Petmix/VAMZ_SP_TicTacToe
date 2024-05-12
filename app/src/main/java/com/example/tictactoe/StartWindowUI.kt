@@ -18,21 +18,18 @@ import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
 enum class TTTApp(@StringRes val title: Int)
@@ -148,9 +145,8 @@ fun MainWindow(
 }
 
 @Composable
-fun TicTacToeAppStart(navController: NavHostController = rememberNavController())
+fun TicTacToeAppStart(navController: NavHostController = rememberNavController(), gmPl: GamePlay = viewModel(factory = GamePlay.factory))
 {
-    val gmPl = GamePlay()
     NavHost(
         navController = navController,
         startDestination = TTTApp.Start.name,
@@ -192,7 +188,8 @@ fun TicTacToeAppStart(navController: NavHostController = rememberNavController()
         composable(route = TTTApp.ScoreBoard.name)
         {
             ScoreBoardWindow(
-                onBackClick = { navigateTo(navController, TTTApp.Start.name) }
+                onBackClick = { navigateTo(navController, TTTApp.Start.name) },
+                gamePlay = gmPl
             )
         }
     }
