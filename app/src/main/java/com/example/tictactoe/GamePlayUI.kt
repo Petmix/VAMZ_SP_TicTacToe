@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +52,21 @@ fun Header(gamePlay: GamePlay)
             modifier = Modifier
                 .fillMaxSize(),
             contentScale = ContentScale.Crop
+        )
+    }
+
+    val numOfGames = remember { mutableStateOf(gamePlay.getNumOfGamesPlayed().toString()) }
+    Row(
+        verticalAlignment = Alignment.Top,
+        horizontalArrangement = Arrangement.Center
+    )
+    {
+        Text(
+            text = numOfGames.value,
+            fontSize = 38.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
+            modifier = Modifier.padding(0.dp, 80.dp, 0.dp, 0.dp)
         )
     }
 
@@ -148,13 +164,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
         {
             Button(
                 onClick = {
-                    if (gamePlay.moves[0] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[0] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(0)
                         a1.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -185,13 +219,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[1] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[1] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(1)
                         a2.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -222,13 +274,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[2] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[2] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(2)
                         a3.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -260,13 +330,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
         {
             Button(
                 onClick = {
-                    if (gamePlay.moves[3] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[3] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(3)
                         a4.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -297,13 +385,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[4] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[4] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(4)
                         a5.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -334,13 +440,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[5] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[5] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(5)
                         a6.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -372,13 +496,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
         {
             Button(
                 onClick = {
-                    if (gamePlay.moves[6] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[6] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(6)
                         a7.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -409,13 +551,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[7] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[7] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(7)
                         a8.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -446,13 +606,31 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.moves[8] == null || !gamePlay.gameOver.value)
+                    if (gamePlay.moves[8] == null && !gamePlay.gameOver.value)
                     {
                         gamePlay.setMove(8)
                         a9.floatValue = 1.0f
                         gamePlay.checkEnd()
                         gamePlay.goNext()
-                        if (!gamePlay.multiPlayerMode.value) gamePlay.moveAI()
+                        if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
+                        {
+                            val index = gamePlay.moveAI()
+                            when (index)
+                            {
+                                0 -> a1.floatValue = 1.0f
+                                1 -> a2.floatValue = 1.0f
+                                2 -> a3.floatValue = 1.0f
+                                3 -> a4.floatValue = 1.0f
+                                4 -> a5.floatValue = 1.0f
+                                5 -> a6.floatValue = 1.0f
+                                6 -> a7.floatValue = 1.0f
+                                7 -> a8.floatValue = 1.0f
+                                8 -> a9.floatValue = 1.0f
+                                9 -> gamePlay.gameOver.value = true
+                            }
+                            gamePlay.checkEnd()
+                            gamePlay.goNext()
+                        }
                     }
                 },
                 colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
@@ -488,6 +666,11 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
         {
             Button(
                 onClick = {
+                    if (gamePlay.gameOver.value)
+                    {
+                        gamePlay.addNumOfGamesPlayed()
+                    }
+                    // Save TTTState to database
                     onGameEnd()
                 },
                 colors = ButtonColors(

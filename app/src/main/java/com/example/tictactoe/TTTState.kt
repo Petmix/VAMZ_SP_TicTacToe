@@ -4,5 +4,6 @@ data class TTTState(
     var player1Name: String = "",
     var player1Score: Int = 0,
     var player2Name: String = "",
-    var player2Score: Int = 0
+    var player2Score: Int = 0,
+    var numberOfGamesPlayed: Int = 0
 )

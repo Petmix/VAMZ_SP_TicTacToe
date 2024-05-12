@@ -246,7 +246,12 @@ fun MultiplayerNewGameWindow(
                             gamePlay.setPlayer1Name(p1Name)
                             gamePlay.setPlayer2Name(p2Name)
                             gamePlay.multiPlayerMode.value = true
-                            gamePlay.setPlayerTurn(selectedButton - 1)
+                            when (selectedButton)
+                            {
+                                1 -> gamePlay.setPlayerTurn(1)
+                                2 -> gamePlay.setPlayerTurn(2)
+                                3 -> gamePlay.setPlayerTurn(0)
+                            }
                             onNextButtonClicked()
                         }
                     },

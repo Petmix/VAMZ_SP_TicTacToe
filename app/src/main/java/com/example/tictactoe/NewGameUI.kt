@@ -324,7 +324,13 @@ fun NewGameWindow(
                             gamePlay.setPlayer2Name(p2Name)
                             gamePlay.difficulty.intValue = difficultySelected
                             gamePlay.multiPlayerMode.value = false
-                            gamePlay.setPlayerTurn(selectedButton - 1)
+                            when (selectedButton)
+                            {
+                                1 -> gamePlay.setPlayerTurn(1)
+                                2 -> gamePlay.setPlayerTurn(2)
+                                3 -> gamePlay.setPlayerTurn(0)
+                            }
+
                             onNextButtonClicked()
                         }
                     },

@@ -41,72 +41,177 @@ class GamePlay : ViewModel()
                 moves[i] = null
             }
         }
+        addNumOfGamesPlayed()
         gameOver.value = false
+
+        if ((_uiState.value.player1Name == "" && playerTurn.value) ||
+            (_uiState.value.player2Name == "" && !playerTurn.value))
+        {
+            moveAI()
+        }
     }
 
-    fun moveAI()
+    fun addNumOfGamesPlayed()
+    {
+        _uiState.value.numberOfGamesPlayed += 1
+    }
+
+    fun getNumOfGamesPlayed() : Int
+    {
+        return _uiState.value.numberOfGamesPlayed
+    }
+
+    fun moveAI() : Int
     {
         when (difficulty.intValue)
         {
-            1 -> moveAIEasy()
-            2 -> moveAIMedium()
-            3 -> moveAIHard()
+            1 -> return moveAIEasy()
+            2 -> return moveAIMedium()
+            3 -> return moveAIHard()
         }
+        return 9
     }
 
-    private fun moveAIEasy()
-    {
-        for (i in 0..8)
-        {
-            if (moves[i] == null) moves[i] = playerTurn.value
-            checkEnd()
-            goNext()
-        }
-    }
-
-    private fun moveAIMedium()
-    {
-        val nulls = mutableListOf<Int>()
-        var index = 0
-        for (i in 0..8)
-        {
-            if (moves[i] == null)
-            {
-                nulls.add(index, i)
-                index++
-            }
-        }
-        moves[nulls[Random.nextInt(nulls.size)]] = playerTurn.value
-        checkEnd()
-        goNext()
-    }
-
-    private fun moveAIHard()
+    private fun moveAIEasy() : Int
     {
         val turn = !playerTurn.value
         val aiTurn = playerTurn.value
+        var result = 9
 
-        if (moves[0] == turn && moves[1] == turn) moves[2] = aiTurn
-        else if (moves[1] == turn && moves[2] == turn) moves[0] = aiTurn
-        else if (moves[3] == turn && moves[4] == turn) moves[5] = aiTurn
-        else if (moves[4] == turn && moves[5] == turn) moves[3] = aiTurn
-        else if (moves[6] == turn && moves[7] == turn) moves[8] = aiTurn
-        else if (moves[7] == turn && moves[8] == turn) moves[6] = aiTurn
-        else if (moves[0] == turn && moves[4] == turn) moves[8] = aiTurn
-        else if (moves[4] == turn && moves[8] == turn) moves[0] = aiTurn
-        else if (moves[2] == turn && moves[4] == turn) moves[6] = aiTurn
-        else if (moves[4] == turn && moves[6] == turn) moves[2] = aiTurn
+        if (moves[0] == turn && moves[1] == turn) result = 2
+        else if (moves[1] == turn && moves[2] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[2] == turn && moves[1] == null) result = 1
+        else if (moves[3] == turn && moves[4] == turn && moves[5] == null) result = 5
+        else if (moves[4] == turn && moves[5] == turn && moves[3] == null) result = 3
+        else if (moves[3] == turn && moves[5] == turn && moves[4] == null) result = 4
+        else if (moves[6] == turn && moves[7] == turn && moves[8] == null) result = 8
+        else if (moves[7] == turn && moves[8] == turn && moves[6] == null) result = 6
+        else if (moves[6] == turn && moves[8] == turn && moves[7] == null) result = 7
+        else if (moves[0] == turn && moves[4] == turn && moves[8] == null) result = 8
+        else if (moves[4] == turn && moves[8] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[8] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[4] == turn && moves[6] == null) result = 6
+        else if (moves[4] == turn && moves[6] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[6] == turn && moves[4] == null) result = 4
+        else if (moves[0] == turn && moves[3] == turn && moves[6] == null) result = 6
+        else if (moves[3] == turn && moves[6] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[6] == turn && moves[3] == null) result = 3
+        else if (moves[1] == turn && moves[4] == turn && moves[7] == null) result = 7
+        else if (moves[4] == turn && moves[7] == turn && moves[1] == null) result = 1
+        else if (moves[1] == turn && moves[7] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[5] == turn && moves[8] == null) result = 8
+        else if (moves[5] == turn && moves[8] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[8] == turn && moves[5] == null) result = 5
         else
         {
-            if (moves[0] == aiTurn && moves[1] == aiTurn) moves[2] = aiTurn
-            else if (moves[1] == aiTurn && moves[2] == aiTurn) moves[0] = aiTurn
-            else if (moves[3] == aiTurn && moves[4] == aiTurn) moves[5] = aiTurn
-            else if (moves[4] == aiTurn && moves[5] == aiTurn) moves[8] = aiTurn
-            else if (moves[7] == aiTurn && moves[8] == aiTurn) moves[6] = aiTurn
-            else if (moves[0] == aiTurn && moves[4] == aiTurn) moves[8] = aiTurn
-            else if (moves[4] == aiTurn && moves[8] == aiTurn) moves[0] = aiTurn
-            else if (moves[2] == aiTurn && moves[4] == aiTurn) moves[6] = aiTurn
-            else if (moves[4] == aiTurn && moves[6] == aiTurn) moves[2] = aiTurn
+            for (i in 0..moves.size)
+            {
+                if (moves[i] == null)
+                {
+                    result = i
+                    break
+                }
+            }
+        }
+
+        moves[result] = aiTurn
+        return result
+    }
+
+    private fun moveAIMedium() : Int
+    {
+        val turn = !playerTurn.value
+        val aiTurn = playerTurn.value
+        var result = 9
+
+        if (moves[0] == turn && moves[1] == turn) result = 2
+        else if (moves[1] == turn && moves[2] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[2] == turn && moves[1] == null) result = 1
+        else if (moves[3] == turn && moves[4] == turn && moves[5] == null) result = 5
+        else if (moves[4] == turn && moves[5] == turn && moves[3] == null) result = 3
+        else if (moves[3] == turn && moves[5] == turn && moves[4] == null) result = 4
+        else if (moves[6] == turn && moves[7] == turn && moves[8] == null) result = 8
+        else if (moves[7] == turn && moves[8] == turn && moves[6] == null) result = 6
+        else if (moves[6] == turn && moves[8] == turn && moves[7] == null) result = 7
+        else if (moves[0] == turn && moves[4] == turn && moves[8] == null) result = 8
+        else if (moves[4] == turn && moves[8] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[8] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[4] == turn && moves[6] == null) result = 6
+        else if (moves[4] == turn && moves[6] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[6] == turn && moves[4] == null) result = 4
+        else if (moves[0] == turn && moves[3] == turn && moves[6] == null) result = 6
+        else if (moves[3] == turn && moves[6] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[6] == turn && moves[3] == null) result = 3
+        else if (moves[1] == turn && moves[4] == turn && moves[7] == null) result = 7
+        else if (moves[4] == turn && moves[7] == turn && moves[1] == null) result = 1
+        else if (moves[1] == turn && moves[7] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[5] == turn && moves[8] == null) result = 8
+        else if (moves[5] == turn && moves[8] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[8] == turn && moves[5] == null) result = 5
+        else
+        {
+            val nulls = mutableListOf<Int>()
+            var index = 0
+            for (i in 0..8)
+            {
+                if (moves[i] == null)
+                {
+                    nulls.add(index, i)
+                    index++
+                }
+            }
+
+            if (nulls.size > 0)
+            {
+                result = nulls[Random.nextInt(nulls.size)]
+            }
+        }
+
+        moves[result] = aiTurn
+        return 9
+    }
+
+    private fun moveAIHard() : Int
+    {
+        val turn = !playerTurn.value
+        val aiTurn = playerTurn.value
+        var result = 9
+
+        if (moves[0] == turn && moves[1] == turn) result = 2
+        else if (moves[1] == turn && moves[2] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[2] == turn && moves[1] == null) result = 1
+        else if (moves[3] == turn && moves[4] == turn && moves[5] == null) result = 5
+        else if (moves[4] == turn && moves[5] == turn && moves[3] == null) result = 3
+        else if (moves[3] == turn && moves[5] == turn && moves[4] == null) result = 4
+        else if (moves[6] == turn && moves[7] == turn && moves[8] == null) result = 8
+        else if (moves[7] == turn && moves[8] == turn && moves[6] == null) result = 6
+        else if (moves[6] == turn && moves[8] == turn && moves[7] == null) result = 7
+        else if (moves[0] == turn && moves[4] == turn && moves[8] == null) result = 8
+        else if (moves[4] == turn && moves[8] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[8] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[4] == turn && moves[6] == null) result = 6
+        else if (moves[4] == turn && moves[6] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[6] == turn && moves[4] == null) result = 4
+        else if (moves[0] == turn && moves[3] == turn && moves[6] == null) result = 6
+        else if (moves[3] == turn && moves[6] == turn && moves[0] == null) result = 0
+        else if (moves[0] == turn && moves[6] == turn && moves[3] == null) result = 3
+        else if (moves[1] == turn && moves[4] == turn && moves[7] == null) result = 7
+        else if (moves[4] == turn && moves[7] == turn && moves[1] == null) result = 1
+        else if (moves[1] == turn && moves[7] == turn && moves[4] == null) result = 4
+        else if (moves[2] == turn && moves[5] == turn && moves[8] == null) result = 8
+        else if (moves[5] == turn && moves[8] == turn && moves[2] == null) result = 2
+        else if (moves[2] == turn && moves[8] == turn && moves[5] == null) result = 5
+        else
+        {
+            if (moves[0] == aiTurn && moves[1] == aiTurn) result = 2
+            else if (moves[1] == aiTurn && moves[2] == aiTurn && moves[0] == null) result = 0
+            else if (moves[3] == aiTurn && moves[4] == aiTurn && moves[5] == null) result = 5
+            else if (moves[4] == aiTurn && moves[5] == aiTurn && moves[8] == null) result = 8
+            else if (moves[7] == aiTurn && moves[8] == aiTurn && moves[6] == null) result = 6
+            else if (moves[0] == aiTurn && moves[4] == aiTurn && moves[8] == null) result = 8
+            else if (moves[4] == aiTurn && moves[8] == aiTurn && moves[0] == null) result = 0
+            else if (moves[2] == aiTurn && moves[4] == aiTurn && moves[6] == null) result = 6
+            else if (moves[4] == aiTurn && moves[6] == aiTurn && moves[2] == null) result = 2
             else
             {
                 val corners = mutableListOf<Int>()
@@ -140,9 +245,9 @@ class GamePlay : ViewModel()
                         }
                     }
 
-                    if (nulls.size != 0)
+                    if (nulls.size > 0)
                     {
-                        moves[nulls[Random.nextInt(nulls.size)]] = aiTurn
+                        result = nulls[Random.nextInt(nulls.size)]
                     }
                 }
                 else
@@ -174,8 +279,8 @@ class GamePlay : ViewModel()
                             }
                         }
 
-                        if (nulls2.size != 0) {
-                            moves[nulls2[Random.nextInt(nulls2.size)]] = aiTurn
+                        if (nulls2.size > 0) {
+                            result = nulls2[Random.nextInt(nulls2.size)]
                         }
                     }
                     else
@@ -190,13 +295,13 @@ class GamePlay : ViewModel()
                                 index5++
                             }
                         }
-                        moves[nulls3[Random.nextInt(nulls3.size)]] = playerTurn.value
+                        result = nulls3[Random.nextInt(nulls3.size)]
                     }
                 }
             }
         }
-        checkEnd()
-        goNext()
+        moves[result] = aiTurn
+        return result
     }
 
     fun setPlayerTurn(turn: Int)
