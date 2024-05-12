@@ -75,66 +75,79 @@ fun Header(gamePlay: GamePlay)
     val colorDark = colorResource(id = R.color.dark_navy_blue)
     Row(
         verticalAlignment = Alignment.Top,
-        horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier.padding(0.dp, 150.dp, 0.dp, 0.dp)
     )
     {
-        Box(
+        Column(
+            horizontalAlignment = Alignment.Start,
             modifier = Modifier
-                .width(120.dp)
-                .height(90.dp)
-                .background(
-                    color = if (gamePlay.playerTurn.value) colorDark else color,
-                    shape = shapes.medium
-                )
+                .padding(60.dp, 0.dp, 0.dp, 0.dp)
         )
         {
-            Text(
-                text = gamePlay.getPlayer1Name(),
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(0.dp, 5.dp, 0.dp, 0.dp),
-                color = Color.White,
-                fontSize = 24.sp
+                    .width(120.dp)
+                    .height(90.dp)
+                    .background(
+                        color = if (gamePlay.playerTurn.value) colorDark else color,
+                        shape = shapes.medium
+                    )
             )
+            {
+                Text(
+                    text = gamePlay.getPlayer1Name(),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(0.dp, 5.dp, 0.dp, 0.dp),
+                    color = Color.White,
+                    fontSize = 20.sp
+                )
 
-            Text(
-                text = gamePlay.getPlayer1Score().toString(),
-                modifier = Modifier
-                    .padding(50.dp, 50.dp, 0.dp, 0.dp),
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
+                Text(
+                    text = gamePlay.getPlayer1Score().toString(),
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                )
+            }
         }
 
-        Box(
+        Column(
+            horizontalAlignment = Alignment.End,
             modifier = Modifier
-                .width(120.dp)
-                .height(90.dp)
-                .background(
-                    color = if (gamePlay.playerTurn.value) color else colorDark,
-                    shape = shapes.medium
-                )
+                .padding(90.dp, 0.dp, 0.dp, 0.dp)
         )
         {
-            Text(
-                text = gamePlay.getPlayer2Name(),
+            Box(
                 modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(0.dp, 5.dp, 0.dp, 0.dp),
-                color = Color.White,
-                fontSize = 24.sp
+                    .width(120.dp)
+                    .height(90.dp)
+                    .background(
+                        color = if (gamePlay.playerTurn.value) color else colorDark,
+                        shape = shapes.medium
+                    )
             )
+            {
+                Text(
+                    text = gamePlay.getPlayer2Name(),
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(0.dp, 5.dp, 0.dp, 0.dp),
+                    color = Color.White,
+                    fontSize = 20.sp
+                )
 
-            Text(
-                text = gamePlay.getPlayer2Score().toString(),
-                modifier = Modifier
-                    .padding(50.dp, 50.dp, 0.dp, 0.dp),
-                color = Color.White,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
+                Text(
+                    text = gamePlay.getPlayer2Score().toString(),
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                )
+            }
         }
     }
 }
@@ -672,7 +685,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     {
                         gamePlay.addNumOfGamesPlayed()
                     }
-                    //gamePlay.saveToDatabase(coroutineScope)
+                    gamePlay.saveToDatabase(coroutineScope)
                     onGameEnd()
                 },
                 colors = ButtonColors(

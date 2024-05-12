@@ -31,7 +31,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -47,7 +46,6 @@ fun NewGameWindow(
     val image = painterResource(R.drawable.newgamebackground)
     var p1Name by remember { mutableStateOf("") }
     var p2Name by remember { mutableStateOf("") }
-    var selectedButton by remember { mutableIntStateOf(0) }
     var difficultySelected by remember { mutableIntStateOf(0) }
 
     Box()
@@ -79,7 +77,7 @@ fun NewGameWindow(
         {
             TextField(
                 value = p1Name,
-                onValueChange = { if (p2Name == "") p1Name = it },
+                onValueChange = { if (p2Name == "" && (p1Name.length < 10 || it.length < 10)) p1Name = it },
                 modifier = Modifier
                     .padding(30.dp, 60.dp, 0.dp, 0.dp)
                     .width(320.dp),
@@ -93,7 +91,7 @@ fun NewGameWindow(
 
             TextField(
                 value = p2Name,
-                onValueChange = { if (p1Name == "") p2Name = it },
+                onValueChange = { if (p1Name == "" && (p2Name.length < 10 || it.length < 10)) p2Name = it },
                 modifier = Modifier
                     .padding(30.dp, 140.dp, 0.dp, 0.dp)
                     .width(320.dp),
@@ -121,94 +119,6 @@ fun NewGameWindow(
                     .padding(265.dp, 115.dp, 0.dp, 0.dp)
                     .scale(0.86f, 0.86f)
             )
-
-            Text(
-                text = "Who starts first?",
-                color = colorResource(id = R.color.dark_navy_blue),
-                modifier = Modifier.padding(80.dp, 220.dp, 0.dp, 0.dp),
-                fontSize = 26.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Row(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(10.dp, 80.dp, 0.dp, 0.dp)
-            )
-            {
-                val colorNotSelected = colorResource(id = R.color.light_blue)
-                val colorSelected = colorResource(id = R.color.navy_blue)
-                Button(
-                    onClick = { selectedButton = 1 },
-                    colors = ButtonColors(containerColor = if (selectedButton == 1) colorSelected else colorNotSelected,
-                        contentColor = if (selectedButton == 1) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (selectedButton == 1) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(80.dp)
-                        .height(80.dp)
-                )
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.woodenx),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .scale(2.3f, 2.3f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                Button(
-                    onClick = { selectedButton = 2 },
-                    colors = ButtonColors(containerColor = if (selectedButton == 2) colorSelected else colorNotSelected,
-                        contentColor = if (selectedButton == 2) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (selectedButton == 2) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(80.dp)
-                        .height(80.dp)
-                )
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.throwrings),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .scale(2.4f, 2.4f)
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(15.dp))
-
-                Button(
-                    onClick = {  selectedButton = 3 },
-                    colors = ButtonColors(containerColor = if (selectedButton == 3) colorSelected else colorNotSelected,
-                        contentColor = if (selectedButton == 3) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
-                        disabledContentColor = colorNotSelected),
-                    modifier = Modifier
-                        .background(
-                            color = if (selectedButton == 3) colorSelected else colorNotSelected,
-                            shape = MaterialTheme.shapes.medium
-                        )
-                        .width(80.dp)
-                        .height(80.dp)
-                )
-                {
-                    Image(
-                        painter = painterResource(id = R.drawable.both),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(5.dp, 5.dp, 0.dp, 0.dp)
-                            .scale(2.6f, 2.6f)
-                    )
-                }
-            }
 
             Row(
                 modifier = Modifier
@@ -317,20 +227,14 @@ fun NewGameWindow(
 
                 Button(
                     onClick = {
-                        if ((p1Name != "" || p2Name != "") && selectedButton != 0 && difficultySelected != 0)
+                        if ((p1Name != "" || p2Name != "") && difficultySelected != 0)
                         {
                             gamePlay.resetGame()
                             gamePlay.setPlayer1Name(p1Name)
                             gamePlay.setPlayer2Name(p2Name)
                             gamePlay.difficulty.intValue = difficultySelected
                             gamePlay.multiPlayerMode.value = false
-                            when (selectedButton)
-                            {
-                                1 -> gamePlay.setPlayerTurn(1)
-                                2 -> gamePlay.setPlayerTurn(2)
-                                3 -> gamePlay.setPlayerTurn(0)
-                            }
-
+                            gamePlay.playerTurn.value = p1Name != ""
                             onNextButtonClicked()
                         }
                     },

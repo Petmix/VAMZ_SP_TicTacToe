@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun ScoreBoardWindow(onBackClick: () -> Unit, gamePlay: GamePlay)
 {
-    val image = painterResource(R.drawable.scoreboardbackground)
     Box(
         modifier = Modifier
             .width(500.dp)

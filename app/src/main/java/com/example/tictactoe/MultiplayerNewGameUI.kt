@@ -78,7 +78,7 @@ fun MultiplayerNewGameWindow(
         {
             TextField(
                 value = p1Name,
-                onValueChange = { p1Name = it },
+                onValueChange = { if (p1Name.length < 10 || it.length < 10) p1Name = it },
                 modifier = Modifier
                     .padding(30.dp, 60.dp, 0.dp, 0.dp)
                     .width(320.dp),
@@ -92,7 +92,7 @@ fun MultiplayerNewGameWindow(
 
             TextField(
                 value = p2Name,
-                onValueChange = { p2Name = it },
+                onValueChange = { if (p2Name.length < 10 || it.length < 10) p2Name = it },
                 modifier = Modifier
                     .padding(30.dp, 140.dp, 0.dp, 0.dp)
                     .width(320.dp),

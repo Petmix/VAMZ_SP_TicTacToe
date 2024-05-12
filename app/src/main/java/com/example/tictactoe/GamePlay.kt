@@ -3,10 +3,15 @@ package com.example.tictactoe
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
 import kotlin.random.Random
 
-class GamePlay() : ViewModel()
+class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
 {
     private val _uiState = MutableStateFlow(TTTState())
     val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
@@ -19,20 +24,11 @@ class GamePlay() : ViewModel()
         _uiState.value = TTTState()
     }
 
-    /*companion object {
-        val factory : ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as MainApplication)
-                GamePlay(application.database.gamesDao())
-            }
-        }
-    }
-
-    fun getListFromDao(coroutineScope: CoroutineScope) : List<TTTState>
+    fun getListFromRepositary(coroutineScope: CoroutineScope) : List<TTTState>
     {
         var gamesList: List<TTTState> = emptyList()
         coroutineScope.launch {
-            gamesList = getListFromFlow(gamesDao.getAllGames())
+            gamesList = getListFromFlow(itemsRepository.getAllItemsStream())
         }
         return gamesList
     }
@@ -44,7 +40,7 @@ class GamePlay() : ViewModel()
             itemList = items
         }
         return itemList
-    }*/
+    }
 
     fun resetGame()
     {
@@ -61,6 +57,11 @@ class GamePlay() : ViewModel()
 
     fun playAgain()
     {
+        if (!multiPlayerMode.value)
+        {
+            playerTurn.value = _uiState.value.player1Name != ""
+        }
+
         for (i in 0..< moves.size)
         {
             if (moves[i] != null)
@@ -70,12 +71,6 @@ class GamePlay() : ViewModel()
         }
         addNumOfGamesPlayed()
         gameOver.value = false
-
-        if ((_uiState.value.player1Name == "" && playerTurn.value) ||
-            (_uiState.value.player2Name == "" && !playerTurn.value))
-        {
-            moveAI()
-        }
     }
 
     fun addNumOfGamesPlayed()
@@ -151,7 +146,7 @@ class GamePlay() : ViewModel()
         val aiTurn = playerTurn.value
         var result = 9
 
-        if (moves[0] == turn && moves[1] == turn) result = 2
+        if (moves[0] == turn && moves[1] == turn && moves[2] == null) result = 2
         else if (moves[1] == turn && moves[2] == turn && moves[0] == null) result = 0
         else if (moves[0] == turn && moves[2] == turn && moves[1] == null) result = 1
         else if (moves[3] == turn && moves[4] == turn && moves[5] == null) result = 5
@@ -195,7 +190,7 @@ class GamePlay() : ViewModel()
         }
 
         moves[result] = aiTurn
-        return 9
+        return result
     }
 
     private fun moveAIHard() : Int
@@ -363,9 +358,9 @@ class GamePlay() : ViewModel()
 
     fun setPlayer1Name(name: String)
     {
-        if (multiPlayerMode.value)
+        if (!multiPlayerMode.value && name == "")
         {
-            if (name == "") _uiState.value.player1Name = "AI"
+            _uiState.value.player1Name = "AI"
         }
         else
         {
@@ -380,9 +375,9 @@ class GamePlay() : ViewModel()
 
     fun setPlayer2Name(name: String)
     {
-        if (multiPlayerMode.value)
+        if (!multiPlayerMode.value && name == "")
         {
-            if (name == "") _uiState.value.player2Name = "AI"
+            _uiState.value.player2Name = "AI"
         }
         else
         {
@@ -456,14 +451,14 @@ class GamePlay() : ViewModel()
         return 0
     }
 
-    /*fun saveToDatabase(coroutineScope: CoroutineScope)
+    fun saveToDatabase(coroutineScope: CoroutineScope)
     {
         val dateTime = toDateAndTime(Date())
         val both = dateTime.split(' ')
         _uiState.value.date = both[0]
         _uiState.value.time = both[1]
         coroutineScope.launch{
-            gamesDao.insertGame(_uiState.value)
+            itemsRepository.insertItem(_uiState.value)
         }
     }
 
@@ -471,5 +466,5 @@ class GamePlay() : ViewModel()
     {
         val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")
         return sdf.format(date)
-    }*/
+    }
 }
