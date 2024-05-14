@@ -145,7 +145,10 @@ fun MainWindow(
 }
 
 @Composable
-fun TicTacToeAppStart(navController: NavHostController = rememberNavController(), gmPl: GamePlay = viewModel(factory = AppViewModelProvider.Factory))
+fun TicTacToeAppStart(
+    navController: NavHostController = rememberNavController(),
+    gmPl: GamePlay = viewModel(factory = AppViewModelProvider.Factory)
+)
 {
     NavHost(
         navController = navController,
@@ -188,8 +191,7 @@ fun TicTacToeAppStart(navController: NavHostController = rememberNavController()
         composable(route = TTTApp.ScoreBoard.name)
         {
             ScoreBoardWindow(
-                onBackClick = { navigateTo(navController, TTTApp.Start.name) },
-                gamePlay = gmPl
+                onBackClick = { navigateTo(navController, TTTApp.Start.name) }
             )
         }
     }

@@ -3,7 +3,9 @@ package com.example.tictactoe
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-
+/**
+ * Entity data class represents a single row in the database.
+ */
 @Entity(tableName = "games")
 data class TTTState(
     @PrimaryKey(autoGenerate = true)

@@ -22,8 +22,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -32,9 +32,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun ScoreBoardWindow(onBackClick: () -> Unit, gamePlay: GamePlay)
+fun ScoreBoardWindow(onBackClick: () -> Unit, score: ScoreBoardViewModel = viewModel(factory = AppViewModelProvider.Factory))
 {
     Box(
         modifier = Modifier
@@ -91,15 +92,13 @@ fun ScoreBoardWindow(onBackClick: () -> Unit, gamePlay: GamePlay)
         )
     }
 
-    GamesList(gamePlay)
+    GamesList(score)
 }
 
 @Composable
-fun GamesList(gamePlay: GamePlay)
+fun GamesList(score: ScoreBoardViewModel)
 {
-    val coroutineScope = rememberCoroutineScope()
-    //val games = remember { gamePlay.getListFromDao(coroutineScope) }
-    val games = remember { DataProvider.gameList }
+    val scoreState by score.scoreState.collectAsState()
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -125,9 +124,9 @@ fun GamesList(gamePlay: GamePlay)
                     .height(800.dp)
             )
             {
-                items(count = games.size)
+                items(count = scoreState.itemList.size)
                 {
-                    GamesItem(list = games, index = it)
+                    GamesItem(list = scoreState.itemList, index = it)
                 }
             }
         }

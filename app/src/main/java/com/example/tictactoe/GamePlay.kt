@@ -4,7 +4,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -19,28 +18,6 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
     var multiPlayerMode = mutableStateOf(true)
     val gameOver = mutableStateOf(false)
     var difficulty = mutableIntStateOf(2)
-
-    init {
-        _uiState.value = TTTState()
-    }
-
-    fun getListFromRepositary(coroutineScope: CoroutineScope) : List<TTTState>
-    {
-        var gamesList: List<TTTState> = emptyList()
-        coroutineScope.launch {
-            gamesList = getListFromFlow(itemsRepository.getAllItemsStream())
-        }
-        return gamesList
-    }
-
-    private suspend fun getListFromFlow(flowList: Flow<List<TTTState>>) : List<TTTState>
-    {
-        var itemList: List<TTTState> = emptyList()
-        flowList.collect { items ->
-            itemList = items
-        }
-        return itemList
-    }
 
     fun resetGame()
     {

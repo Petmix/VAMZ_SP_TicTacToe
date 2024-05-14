@@ -685,7 +685,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                     {
                         gamePlay.addNumOfGamesPlayed()
                     }
-                    gamePlay.saveToDatabase(coroutineScope)
+                    if (!gamePlay.multiPlayerMode.value) gamePlay.saveToDatabase(coroutineScope)
                     onGameEnd()
                 },
                 colors = ButtonColors(

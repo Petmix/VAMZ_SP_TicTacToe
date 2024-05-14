@@ -2,7 +2,7 @@ package com.example.tictactoe
 
 import android.app.Application
 
-class InventoryApplication : Application() {
+class GameApplication : Application() {
 
     /**
      * AppContainer instance used by the rest of classes to obtain dependencies
