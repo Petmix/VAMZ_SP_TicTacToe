@@ -10,15 +10,23 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import kotlin.random.Random
 
+/**
+ * Hlavná trieda, ktorá spracuje informácie z používateľského rozhrania NewGameUI alebo MultiplayerNewGameWUI.
+ * Tie si uloží a využíva ich pri používateľskom rozhraní GamePlayUI.
+ * Po ukončení hry uloží informácie do databázy GamesDatabase cez repozitár ItemsRepository.
+ */
 class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
 {
-    private val _uiState = MutableStateFlow(TTTState())
-    val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null)
-    val playerTurn = mutableStateOf(true)
-    var multiPlayerMode = mutableStateOf(true)
-    val gameOver = mutableStateOf(false)
-    var difficulty = mutableIntStateOf(2)
+    private val _uiState = MutableStateFlow(TTTState()) // Stav, ktorý si drží informácie popísané v [TTTState]
+    val moves = mutableListOf<Boolean?>(null, null, null, null, null, null, null, null, null) // ťahy -> true = hráč 1, false = hráč 2, null = prázdny ťah
+    val playerTurn = mutableStateOf(true) // kto je na rade
+    var multiPlayerMode = mutableStateOf(true) // hráč proti hráčovi alebo hráč proti počítaču
+    val gameOver = mutableStateOf(false) // koniec hry
+    var difficulty = mutableIntStateOf(2) // obtiažnosť v prípade hre proti počítaču
 
+    /**
+     * Slúži na vytvorenie novej inštancie TTTState, resetovanie ťahov a premennej pre informáciu o konci hry.
+     */
     fun resetGame()
     {
         _uiState.value = TTTState()
@@ -32,6 +40,9 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         gameOver.value = false
     }
 
+    /**
+     *
+     */
     fun playAgain()
     {
         if (!multiPlayerMode.value)
@@ -50,16 +61,27 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         gameOver.value = false
     }
 
+    /**
+     * Zvýši počet odohraných hier o 1.
+     */
     fun addNumOfGamesPlayed()
     {
         _uiState.value.numberOfGamesPlayed += 1
     }
 
+    /**
+     * Vráti počet odohraných hier.
+     */
     fun getNumOfGamesPlayed() : Int
     {
         return _uiState.value.numberOfGamesPlayed
     }
 
+    /**
+     * Pohyb počítača v prípade hre proti počítaču.
+     * 3 typy: Easy, Medium, Hard - podľa premennej difficulty.
+     * Vráti pozíciu, na ktorú sa rozhodol použiť svoj ťah na zobrazenie obrázka.
+     */
     fun moveAI() : Int
     {
         when (difficulty.intValue)
@@ -71,6 +93,11 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return 9
     }
 
+    /**
+     * Ľahký mód obťiažnosti v hre proti počítaču.
+     * Keď ide hráč vyhrať, zabráni mu v tom, ak nie vloží ťah na prvú voľnú pozíciu.
+     * Vracia pozíciu svojho ťahu podľa tlačidiel.
+     */
     private fun moveAIEasy() : Int
     {
         val turn = !playerTurn.value
@@ -117,6 +144,11 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return result
     }
 
+    /**
+     * Stredný mód obťiažnosti v hre proti počítaču.
+     * Keď ide hráč vyhrať, zabráni mu v tom, ak nie vloží ťah na náhodnú voľnú pozíciu.
+     * Vracia pozíciu svojho ťahu podľa tlačidiel.
+     */
     private fun moveAIMedium() : Int
     {
         val turn = !playerTurn.value
@@ -170,6 +202,15 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return result
     }
 
+    /**
+     * Ťažký mód obťiažnosti v hre proti počítaču.
+     * Keď ide hráč vyhrať, zabráni mu v tom.
+     * => Pokiaľ ide vyhrať počítač, tak to spraví.
+     *   => Skontroluje 4 vrcholy, pokiaľ na jednom z nich už má svoj ťah, skontroluje ostatné, či sú prázdne, Vyberie náhodný z nich.
+     *     => Skontroluje 4 stredné okraje, pokiaľ na jednom z nich už má svoj ťah, skontroluje ostatné, či sú prázdne, Vyberie náhodný z nich.
+     *       => Dá na náhodnúi pozíciu.
+     * Vracia pozíciu svojho ťahu podľa tlačidiel.
+     */
     private fun moveAIHard() : Int
     {
         val turn = !playerTurn.value
@@ -303,6 +344,10 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return result
     }
 
+    /**
+     * Nastaví kto je na rade. Volá sa pri vytváraní hry v NewGameUI alebo MultiplayerNewGameUI.
+     * Možnosť náhodného výberu.
+     */
     fun setPlayerTurn(turn: Int)
     {
         when (turn)
@@ -313,26 +358,42 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         }
     }
 
+    /**
+     * Náhodne vyberie, kto je na rade, pomocou triedy Random.
+     */
     private fun chooseRandomTurn() : Boolean
     {
         return Random.nextBoolean()
     }
 
+    /**
+     * Nastaví ťah pomocou pozície.
+     */
     fun setMove(move: Int)
     {
         moves[move] = playerTurn.value
     }
 
+    /**
+     * Ďalší je na ťahu - zmení kto je na ťahu na opačnú hodnotu.
+     */
     fun goNext()
     {
         playerTurn.value = !playerTurn.value
     }
 
+    /**
+     * Vráti meno hráča 1.
+     */
     fun getPlayer1Name() : String
     {
         return _uiState.value.player1Name
     }
 
+    /**
+     * Nastaví meno hráča 1.
+     * Ak je nastavená hra proti počítaču a meno je prázdne, nastaví meno "AI".
+     */
     fun setPlayer1Name(name: String)
     {
         if (!multiPlayerMode.value && name == "")
@@ -345,11 +406,18 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         }
     }
 
+    /**
+     * Vráti meno hráča 2.
+     */
     fun getPlayer2Name() : String
     {
         return _uiState.value.player2Name
     }
 
+    /**
+     * Nastaví meno hráča 2.
+     * Ak je nastavená hra proti počítaču a meno je prázdne, nastaví meno "AI".
+     */
     fun setPlayer2Name(name: String)
     {
         if (!multiPlayerMode.value && name == "")
@@ -362,27 +430,43 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         }
     }
 
+    /**
+     * Vráti skóre hráča 1.
+     */
     fun getPlayer1Score() : Int
     {
         return _uiState.value.player1Score
     }
 
+    /**
+     * Zvýši skóre hráča 1 o 1.
+     */
     private fun addScoreToP1()
     {
         _uiState.value.player1Score += 1
     }
 
+    /**
+     * Vráti skóre hráča 2.
+     */
     fun getPlayer2Score() : Int
     {
         return _uiState.value.player2Score
     }
 
+    /**
+     * Zvýši skóre hráča 2 o 1.
+     */
     private fun addScoreToP2()
     {
         _uiState.value.player2Score += 1
     }
 
-
+    /**
+     * Skontroluje či je koniec hry a kto vyhral zavolaním metódy whoWon.
+     * Podľa hodnoty pridá bod jednému s hráčou a oznaámi koniec hry zmenením hodnoty premennej [gameOver].
+     * V prípade remízy sa body nepripíšu.
+     */
     fun checkEnd()
     {
         val won = whoWon()
@@ -393,6 +477,15 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         }
     }
 
+    /**
+     * Ak metóda checkGameOver vráti:
+     *    1 => skontroluje hodnotu políčka 0
+     *    2 => skontroluje hodnotu políčka 4
+     *    3 => skontroluje hodnotu políčka 8
+     * ak vyhral hráč 1 (true) vráti 1, ak hráč 2 (false) vráti 2.
+     *    4 => vráti 3 - remíza
+     *    0 => nikto ešte nevyhral
+     */
     private fun whoWon() : Int
     {
         when(checkGameOver())
@@ -406,6 +499,15 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return 0
     }
 
+    /**
+     * Skontroluje všetky smery (8) a ich hodnoty.
+     * Ak sa všetky 3 hodnoty vedľa seba rovnajú a nie sú prázdne, vráti hodnotu väčšiu ako 0.
+     * Potom skontroluje či nenastala remíza - všetky políčka sú zaplnené ale nikto nevyhral.
+     * 1, 2, 3 => niekto vyhral; vracia viac hodnôt, aby metóda whoWon vedela skontrolovať, kto vyhral.
+     *            podľa vrátenej hodnoty vie skontrolovať príslučné políčko.
+     * 4 => remíza
+     * 0 => nie je koniec hry
+     */
     private fun checkGameOver() : Int
     {
         if (moves[0] == moves[1] && moves[1] == moves[2] && moves[0] != null) return 1
@@ -428,6 +530,10 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         return 0
     }
 
+    /**
+     * Získa si aktuálny dátum a čas, ktorý uloží do aktuálneho TTTState.
+     * Uloží aktuálnu inštanciu TTTState do databázy cez ItemsRepository.
+     */
     fun saveToDatabase(coroutineScope: CoroutineScope)
     {
         val dateTime = toDateAndTime(Date())
@@ -439,6 +545,9 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
         }
     }
 
+    /**
+     * Vráti dátum a čas v správnom formáte "dd.MM.yyyy HH:mm:ss".
+     */
     private fun toDateAndTime(date: Date) : String
     {
         val sdf = SimpleDateFormat("dd.MM.yyyy HH:mm:ss")

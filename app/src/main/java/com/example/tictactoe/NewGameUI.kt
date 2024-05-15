@@ -36,6 +36,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Obrazovka pre vytvorenie hry zadaním informácií ako meno hráčá a obtiažnosť.
+ * Spúšťa hru proti počítaču.
+ */
 @Composable
 fun NewGameWindow(
     onCancelButtonClicked: () -> Unit = {},
@@ -43,12 +47,12 @@ fun NewGameWindow(
     gamePlay: GamePlay
 )
 {
-    val image = painterResource(R.drawable.newgamebackground)
-    var p1Name by remember { mutableStateOf("") }
-    var p2Name by remember { mutableStateOf("") }
-    var difficultySelected by remember { mutableIntStateOf(0) }
+    val image = painterResource(R.drawable.newgamebackground) // obrázok pozadia
+    var p1Name by remember { mutableStateOf("") } // meno 1
+    var p2Name by remember { mutableStateOf("") } // meno 2
+    var difficultySelected by remember { mutableIntStateOf(0) } // obtiažnosť
 
-    Box()
+    Box() // pozadie
     {
         Image(
             painter = image,
@@ -75,8 +79,9 @@ fun NewGameWindow(
                 )
         )
         {
-            TextField(
+            TextField( // zadávanie mena hráča 1
                 value = p1Name,
+                // Dá sa doň písať, len ak je druhé meno prázdne a má obmedzenú dĺžku mena.
                 onValueChange = { if (p2Name == "" && (p1Name.length < 10 || it.length < 10)) p1Name = it },
                 modifier = Modifier
                     .padding(30.dp, 60.dp, 0.dp, 0.dp)
@@ -89,8 +94,9 @@ fun NewGameWindow(
                 label = { Text(stringResource(R.string.name)) }
             )
 
-            TextField(
+            TextField( // zadávanie mena hráča 2
                 value = p2Name,
+                // Dá sa doň písať, len ak je prvé meno prázdne a má obmedzenú dĺžku mena.
                 onValueChange = { if (p1Name == "" && (p2Name.length < 10 || it.length < 10)) p2Name = it },
                 modifier = Modifier
                     .padding(30.dp, 140.dp, 0.dp, 0.dp)
@@ -103,7 +109,7 @@ fun NewGameWindow(
                 label = { Text(stringResource(R.string.name)) }
             )
 
-            Image(
+            Image( // obrázok X pri vpisovaní mena hráča 1
                 painter = painterResource(id = R.drawable.woodenx),
                 contentDescription = null,
                 modifier = Modifier
@@ -112,7 +118,7 @@ fun NewGameWindow(
                     .padding(0.dp, 0.dp, 15.dp, 280.dp)
             )
 
-            Image(
+            Image( // obrázok O pri vpisovaní mena hráča 2
                 painter = painterResource(id = R.drawable.throwrings),
                 contentDescription = null,
                 modifier = Modifier
@@ -120,7 +126,7 @@ fun NewGameWindow(
                     .scale(0.86f, 0.86f)
             )
 
-            Row(
+            Row( // Výber obtiažnosti
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(0.dp, 260.dp, 0.dp, 0.dp)
@@ -129,13 +135,13 @@ fun NewGameWindow(
                 val colorNotSelected = colorResource(id = R.color.navy_blue)
                 val colorSelected = colorResource(id = R.color.dark_navy_blue)
                 Button(
-                    onClick = { difficultySelected = 1 },
+                    onClick = { difficultySelected = 1 }, // Ľahký (Easy) mód
                     colors = ButtonColors(containerColor = if (difficultySelected == 1) colorSelected else colorNotSelected,
                         contentColor = if (difficultySelected == 1) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (difficultySelected == 1) colorSelected else colorNotSelected,
+                            color = if (difficultySelected == 1) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(90.dp)
@@ -152,13 +158,13 @@ fun NewGameWindow(
                 Spacer(modifier = Modifier.width(15.dp))
 
                 Button(
-                    onClick = { difficultySelected = 2 },
+                    onClick = { difficultySelected = 2 }, // Stredný (Medium) mód
                     colors = ButtonColors(containerColor = if (difficultySelected == 2) colorSelected else colorNotSelected,
                         contentColor = if (difficultySelected == 2) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (difficultySelected == 2) colorSelected else colorNotSelected,
+                            color = if (difficultySelected == 2) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(120.dp)
@@ -175,13 +181,13 @@ fun NewGameWindow(
                 Spacer(modifier = Modifier.width(15.dp))
 
                 Button(
-                    onClick = {  difficultySelected = 3 },
+                    onClick = {  difficultySelected = 3 }, // Ťažký (Hard) mód
                     colors = ButtonColors(containerColor = if (difficultySelected == 3) colorSelected else colorNotSelected,
                         contentColor = if (difficultySelected == 3) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (difficultySelected == 3) colorSelected else colorNotSelected,
+                            color = if (difficultySelected == 3) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(90.dp)
@@ -202,7 +208,7 @@ fun NewGameWindow(
                     .padding(10.dp, 420.dp, 0.dp, 0.dp)
             )
             {
-                Button(
+                Button( // Ukončenie procesu tvorby hry a vrátenie sa na hlavnú obrazovku.
                     onClick = { onCancelButtonClicked() },
                     colors = ButtonColors(containerColor = colorResource(id = R.color.white),
                         contentColor = colorResource(id = R.color.white), disabledContainerColor = colorResource(id = R.color.white),
@@ -225,17 +231,17 @@ fun NewGameWindow(
 
                 Spacer(modifier = Modifier.width(20.dp))
 
-                Button(
+                Button( // Poslanie informácii cez inštanciu [GamePlay] na uloženie do inštancie [TTTState].
                     onClick = {
                         if ((p1Name != "" || p2Name != "") && difficultySelected != 0)
                         {
-                            gamePlay.resetGame()
-                            gamePlay.setPlayer1Name(p1Name)
-                            gamePlay.setPlayer2Name(p2Name)
-                            gamePlay.difficulty.intValue = difficultySelected
-                            gamePlay.multiPlayerMode.value = false
-                            gamePlay.playerTurn.value = p1Name != ""
-                            onNextButtonClicked()
+                            gamePlay.resetGame() // Obnovenie/vyčistenie hry
+                            gamePlay.setPlayer1Name(p1Name) // nastavenie mena hráča 1
+                            gamePlay.setPlayer2Name(p2Name) // nastavenie mena hráča 2
+                            gamePlay.difficulty.intValue = difficultySelected // nastavenie obtiažnosti
+                            gamePlay.multiPlayerMode.value = false // hra proti počítaču
+                            gamePlay.playerTurn.value = p1Name != "" // na rade je ten, kto nemá prázdne meno - čiže hráč
+                            onNextButtonClicked() // presun na hernú obrazovku
                         }
                     },
                     colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),

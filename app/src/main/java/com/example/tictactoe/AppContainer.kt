@@ -3,20 +3,19 @@ package com.example.tictactoe
 import android.content.Context
 
 /**
- * App container for Dependency injection.
+ * Kontajner aplikácie na prístup k inštancii ItemsRepository.
  */
-interface AppContainer {
+interface AppContainer
+{
     val itemsRepository: ItemsRepository
 }
 
 /**
- * [AppContainer] implementation that provides instance of [OfflineItemsRepository]
+ * AppContainer implementácia, ktorá dodáva inštanciu OfflineItemsRepository
  */
-class AppDataContainer(private val context: Context) : AppContainer {
-    /**
-     * Implementation for [ItemsRepository]
-     */
+class AppDataContainer(private val context: Context) : AppContainer
+{
     override val itemsRepository: ItemsRepository by lazy {
-        OfflineItemsRepository(GamesDatabase.getDatabase(context).gamesDao())
+        OfflineItemsRepository(GamesDatabase.getDatabase(context).gamesDao()) // získanie Dao z databázy, ktorá je daná ako parameter pri vytvorení inštancie [OfflineItemsRepository]
     }
 }

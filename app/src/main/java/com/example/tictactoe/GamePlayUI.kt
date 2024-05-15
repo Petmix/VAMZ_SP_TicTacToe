@@ -31,6 +31,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Používateľské rozhranie pre hernú plochu.
+ * Pre funkcionalitu a uchovávanie dát využíva inštanciu triedy GamePlay, ktorá dedí z triedy ViewModel.
+ */
 @Composable
 fun TTTScreen(
     gamePlay: GamePlay,
@@ -41,6 +45,10 @@ fun TTTScreen(
     Board(gamePlay, onGameEnd)
 }
 
+/**
+ * Vrchná časť používateľského rozhrania a pozadie.
+ * Ukazuje kto je na rade, kto má koľko bodov a koľko hier bolo odohraných.
+ */
 @Composable
 fun Header(gamePlay: GamePlay)
 {
@@ -152,6 +160,11 @@ fun Header(gamePlay: GamePlay)
     }
 }
 
+/**
+ * Spodná časť - herná plocha.
+ * Je zložená z 9 tlačidiel, ktorých obrázky sa menia a zobrazujú zmenou hodnôt v triede GamePlay.
+ * Na spodku sa 2 ďalšie tlačidlá pre hranie znovu alebo ukončenie a uloženie.
+ */
 @Composable
 fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 {
@@ -181,16 +194,16 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 onClick = {
                     if (gamePlay.moves[0] == null && !gamePlay.gameOver.value)
                     {
-                        gamePlay.setMove(0)
-                        a1.floatValue = 1.0f
-                        gamePlay.checkEnd()
-                        gamePlay.goNext()
+                        gamePlay.setMove(0) // Nastav môj ťah
+                        a1.floatValue = 1.0f // Zobraz obrázok
+                        gamePlay.checkEnd() // Pozri či nie je koniec
+                        gamePlay.goNext() // Ide ďalší
                         if (!gamePlay.multiPlayerMode.value && !gamePlay.gameOver.value)
                         {
-                            val index = gamePlay.moveAI()
+                            val index = gamePlay.moveAI() // AI vyberie políčko a vráti číslo tlačidla
                             when (index)
                             {
-                                0 -> a1.floatValue = 1.0f
+                                0 -> a1.floatValue = 1.0f // Zobrazí príslušný obrázok
                                 1 -> a2.floatValue = 1.0f
                                 2 -> a3.floatValue = 1.0f
                                 3 -> a4.floatValue = 1.0f
@@ -201,8 +214,8 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                                 8 -> a9.floatValue = 1.0f
                                 9 -> gamePlay.gameOver.value = true
                             }
-                            gamePlay.checkEnd()
-                            gamePlay.goNext()
+                            gamePlay.checkEnd() // Pozri či nie je koniec
+                            gamePlay.goNext() // Ide zase hráč
                         }
                     }
                 },
@@ -222,10 +235,10 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 Box()
                 {
                     Image(
-                        painter = if (gamePlay.moves[0] == true) xImage else if (gamePlay.moves[0] == false) oImage else nImage,
+                        painter = if (gamePlay.moves[0] == true) xImage else if (gamePlay.moves[0] == false) oImage else nImage, // Kontroluje stav a mení obrázok príslušne
                         contentDescription = null,
-                        modifier = if (gamePlay.moves[0] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
-                        alpha = a1.floatValue
+                        modifier = if (gamePlay.moves[0] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f), // Zmena veľksoti podľa obrázku
+                        alpha = a1.floatValue // Zobrazenie alebo zmiznutie obrázku
                     )
                 }
             }
@@ -681,12 +694,12 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
         {
             Button(
                 onClick = {
-                    if (gamePlay.gameOver.value)
+                    if (gamePlay.gameOver.value) // Kontrola v prípade, že by hráč ukončil hru predčasne
                     {
-                        gamePlay.addNumOfGamesPlayed()
+                        gamePlay.addNumOfGamesPlayed() // Zvýš počet hier o 1 ak je koniec hry
                     }
-                    if (!gamePlay.multiPlayerMode.value) gamePlay.saveToDatabase(coroutineScope)
-                    onGameEnd()
+                    if (gamePlay.multiPlayerMode.value) gamePlay.saveToDatabase(coroutineScope) // Ulož dáta do databázy
+                    onGameEnd() // Vráť sa na hlavnú obrázovku
                 },
                 colors = ButtonColors(
                     containerColor = Color.White,
@@ -714,10 +727,10 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 
             Button(
                 onClick = {
-                    if (gamePlay.gameOver.value)
+                    if (gamePlay.gameOver.value) // Iba ak je hra ukončená - niekto vyhral alebo je remíza
                     {
-                        gamePlay.playAgain()
-                        a1.floatValue = 0.0f
+                        gamePlay.playAgain() // Spusti hru znova - resetuje ťahy
+                        a1.floatValue = 0.0f // Schová obrázky
                         a2.floatValue = 0.0f
                         a3.floatValue = 0.0f
                         a4.floatValue = 0.0f

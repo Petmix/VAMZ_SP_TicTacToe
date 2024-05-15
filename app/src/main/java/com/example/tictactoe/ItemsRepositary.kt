@@ -3,21 +3,21 @@ package com.example.tictactoe
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository that provides insert, update, delete, and retrieve of [TTTState] from a given data source.
+ * Repozitár ponúka funckie pre vloženie, vymazanie alebo získanie inštancií TTTState z daného dátového zdroju.
  */
 interface ItemsRepository {
     /**
-     * Retrieve all the items from the the given data source.
+     * Získa všetky položky typz TTTState z daného dátového zdroju.
      */
     fun getAllItemsStream(): Flow<List<TTTState>>
 
     /**
-     * Insert item in the data source
+     * Vloží položku typu TTTState do daného dátového zdroju.
      */
     suspend fun insertItem(item: TTTState)
 
     /**
-     * Delete item from the data source
+     * Vymaže položku typu TTTState z daného dátového zdroju.
      */
     suspend fun deleteItem(item: TTTState)
 

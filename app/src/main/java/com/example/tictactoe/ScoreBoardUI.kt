@@ -34,10 +34,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
+/**
+ * Zobrazuje pozadie a názov obrazovky a vytvára list hier TTTState uložených v databáze.
+ */
 @Composable
 fun ScoreBoardWindow(onBackClick: () -> Unit, score: ScoreBoardViewModel = viewModel(factory = AppViewModelProvider.Factory))
 {
-    Box(
+    Box( // modré pozadie
         modifier = Modifier
             .width(500.dp)
             .height(850.dp)
@@ -53,7 +56,7 @@ fun ScoreBoardWindow(onBackClick: () -> Unit, score: ScoreBoardViewModel = viewM
             .padding(10.dp, 10.dp, 0.dp, 0.dp)
     )
     {
-        Button(
+        Button( // tlačidlo na pre vrátenie sa na hlavnú obrazovku
             onClick = { onBackClick() },
             colors = ButtonColors(
                 containerColor = colorResource(id = R.color.navy_blue),
@@ -84,7 +87,7 @@ fun ScoreBoardWindow(onBackClick: () -> Unit, score: ScoreBoardViewModel = viewM
         horizontalArrangement = Arrangement.Center
     )
     {
-        Image(
+        Image( // obrázok textu/názvu Score Board
             painter = painterResource(id = R.drawable.scoreboardtext),
             contentDescription = null,
             modifier = Modifier
@@ -95,10 +98,13 @@ fun ScoreBoardWindow(onBackClick: () -> Unit, score: ScoreBoardViewModel = viewM
     GamesList(score)
 }
 
+/**
+ * Vytvorenie listu hier z databázy pomocou LazyColumn.
+ */
 @Composable
 fun GamesList(score: ScoreBoardViewModel)
 {
-    val scoreState by score.scoreState.collectAsState()
+    val scoreState by score.scoreState.collectAsState() // drží list údajov typu [TTTState] z databázy
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -108,7 +114,7 @@ fun GamesList(score: ScoreBoardViewModel)
             .padding(0.dp, 70.dp, 0.dp, 0.dp)
     )
     {
-        Box(
+        Box( // bledo-modré ohraničenie listu hier
             modifier = Modifier
                 .background(
                     color = colorResource(id = R.color.light_blue),
@@ -116,7 +122,7 @@ fun GamesList(score: ScoreBoardViewModel)
                 )
         )
         {
-            LazyColumn(
+            LazyColumn( // list hier
                 contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
                 userScrollEnabled = true,
                 modifier = Modifier
@@ -133,6 +139,9 @@ fun GamesList(score: ScoreBoardViewModel)
     }
 }
 
+/**
+ * Návrh karty v liste. Každá karta predstavuje jednu hru TTTState uloženú v databáze.
+ */
 @Composable
 fun GamesItem(list: List<TTTState>, index: Int)
 {
@@ -166,7 +175,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     horizontalArrangement = Arrangement.Start
                 )
                 {
-                    Text(
+                    Text( // meno hráča 1
                         text = list[index].player1Name,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
@@ -196,7 +205,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     horizontalArrangement = Arrangement.Start
                 )
                 {
-                    Text(
+                    Text( // meno hráča 2
                         text = list[index].player2Name,
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold,
@@ -216,7 +225,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     verticalAlignment = Alignment.Top
                 )
                 {
-                    Image(
+                    Image( // obrázok X
                         painter = painterResource(id = R.drawable.woodenx),
                         contentDescription = null,
                         modifier = Modifier
@@ -230,7 +239,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     verticalAlignment = Alignment.Bottom
                 )
                 {
-                    Image(
+                    Image( // obrázok O
                         painter = painterResource(id = R.drawable.throwrings),
                         contentDescription = null,
                         modifier = Modifier
@@ -251,7 +260,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     horizontalArrangement = Arrangement.End
                 )
                 {
-                    Text(
+                    Text( // dátum
                         text = list[index].date,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -264,7 +273,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     horizontalArrangement = Arrangement.End
                 )
                 {
-                    Text(
+                    Text( // čas
                         text = list[index].time,
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
@@ -279,7 +288,7 @@ fun GamesItem(list: List<TTTState>, index: Int)
                     horizontalArrangement = Arrangement.End
                 )
                 {
-                    Text(
+                    Text( // skóre hráča 1 ku skóre hráča 2
                         text = list[index].player1Score.toString() + ":" + list[index].player2Score.toString(),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,

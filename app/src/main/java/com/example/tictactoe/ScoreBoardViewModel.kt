@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.stateIn
 class ScoreBoardViewModel(itemsRepository: ItemsRepository) : ViewModel()
 {
     /**
-     * Holds score state. The list of items are retrieved from [ItemsRepository] and mapped to
-     * [DatabaseState]
+     * Drží si stav hier uložených v databáze.
+     * List položiek je zobratý pomocou ItemsRepository a zmapovaný na dátovú triedu DatabaseState
      */
     val scoreState: StateFlow<DatabaseState> =
         itemsRepository.getAllItemsStream().map { DatabaseState(it) }
@@ -21,10 +21,16 @@ class ScoreBoardViewModel(itemsRepository: ItemsRepository) : ViewModel()
                 initialValue = DatabaseState()
             )
 
+    /**
+     * Na zastavenie metódy SharingStarted.WhileSubscribed po 5000 milisekundách (5 sekúnd).
+     */
     companion object
     {
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
+/**
+ * Dátová trieda pre list, do ktorého sa vložia všetky TTTState vybrané z databázy.
+ */
 data class DatabaseState(val itemList: List<TTTState> = listOf())

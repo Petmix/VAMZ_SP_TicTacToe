@@ -2,15 +2,15 @@ package com.example.tictactoe
 
 import android.app.Application
 
+/**
+ * Pristup ku kontextu aplikácie obalený kontajnerom AppDataContainer.
+ */
 class GameApplication : Application() {
 
-    /**
-     * AppContainer instance used by the rest of classes to obtain dependencies
-     */
     lateinit var container: AppContainer
 
     override fun onCreate() {
         super.onCreate()
-        container = AppDataContainer(this)
+        container = AppDataContainer(this) // obalenie kontextu aplikácie do triedy [AppDataContainer]
     }
 }

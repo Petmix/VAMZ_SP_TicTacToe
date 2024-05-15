@@ -4,17 +4,17 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 /**
- * Entity data class represents a single row in the database.
+ * Dátová trieda, ktorá reprezentuje 1 záznam hry v databáze.
  */
 @Entity(tableName = "games")
 data class TTTState(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    var player1Name: String = "",
-    var player1Score: Int = 0,
-    var player2Name: String = "",
-    var player2Score: Int = 0,
-    var numberOfGamesPlayed: Int = 0,
-    var date: String = "",
-    var time: String = ""
+    val id: Int = 0, // automaticky generované jedinečné ID
+    var player1Name: String = "", // meno hráča 1
+    var player1Score: Int = 0, // skóre hráča 1
+    var player2Name: String = "", // meno hráča 2
+    var player2Score: Int = 0, // skóre hráča 2
+    var numberOfGamesPlayed: Int = 0, // počet odohraných hier
+    var date: String = "", // dátum odohrania hry
+    var time: String = "" // čas odohrania hry
 )

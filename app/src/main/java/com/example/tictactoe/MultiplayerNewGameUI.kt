@@ -37,6 +37,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Obrazovka pre vytvorenie hry zadaním informácií ako kto pôjde prvý, meno hráča 1 a meno hráča 2.
+ * Spúšťa hru proti medzi dvomi hráčmi na jednom zariadení.
+ */
 @Composable
 fun MultiplayerNewGameWindow(
     onCancelButtonClicked: () -> Unit = {},
@@ -44,12 +48,12 @@ fun MultiplayerNewGameWindow(
     gamePlay: GamePlay
 )
 {
-    val image = painterResource(R.drawable.newgamebackground)
-    var p1Name by remember { mutableStateOf("") }
-    var p2Name by remember { mutableStateOf("") }
-    var selectedButton by remember { mutableIntStateOf(0) }
+    val image = painterResource(R.drawable.newgamebackground) // obrázok pozadia
+    var p1Name by remember { mutableStateOf("") } // meno hráča 1
+    var p2Name by remember { mutableStateOf("") } // meno hráča 2
+    var selectedButton by remember { mutableIntStateOf(0) } // kto pôjde prvý
 
-    Box()
+    Box() // pozadie
     {
         Image(
             painter = image,
@@ -76,8 +80,9 @@ fun MultiplayerNewGameWindow(
                 )
         )
         {
-            TextField(
+            TextField( // zadávanie mena hráča 1
                 value = p1Name,
+                // Má obmedzenú dĺžku mena.
                 onValueChange = { if (p1Name.length < 10 || it.length < 10) p1Name = it },
                 modifier = Modifier
                     .padding(30.dp, 60.dp, 0.dp, 0.dp)
@@ -90,8 +95,9 @@ fun MultiplayerNewGameWindow(
                 label = { Text(stringResource(R.string.name)) }
             )
 
-            TextField(
+            TextField( // zadávanie mena hráča 2
                 value = p2Name,
+                // Má obmedzenú dĺžku mena.
                 onValueChange = { if (p2Name.length < 10 || it.length < 10) p2Name = it },
                 modifier = Modifier
                     .padding(30.dp, 140.dp, 0.dp, 0.dp)
@@ -104,7 +110,7 @@ fun MultiplayerNewGameWindow(
                 label = { Text(stringResource(R.string.name)) }
             )
 
-            Image(
+            Image( // obrázok X pri vpisovaní mena hráča 1
                 painter = painterResource(id = R.drawable.woodenx),
                 contentDescription = null,
                 modifier = Modifier
@@ -113,7 +119,7 @@ fun MultiplayerNewGameWindow(
                     .padding(0.dp, 0.dp, 15.dp, 280.dp)
             )
 
-            Image(
+            Image( // obrázok O pri vpisovaní mena hráča 2
                 painter = painterResource(id = R.drawable.throwrings),
                 contentDescription = null,
                 modifier = Modifier
@@ -121,7 +127,7 @@ fun MultiplayerNewGameWindow(
                     .scale(0.86f, 0.86f)
             )
 
-            Text(
+            Text( // Text - Kto začína prvý?
                 text = "Who starts first?",
                 color = colorResource(id = R.color.dark_navy_blue),
                 modifier = Modifier.padding(80.dp, 220.dp, 0.dp, 0.dp),
@@ -138,20 +144,20 @@ fun MultiplayerNewGameWindow(
                 val colorNotSelected = colorResource(id = R.color.light_blue)
                 val colorSelected = colorResource(id = R.color.navy_blue)
                 Button(
-                    onClick = { selectedButton = 1 },
+                    onClick = { selectedButton = 1 }, // začína X = hráč 1
                     colors = ButtonColors(containerColor = if (selectedButton == 1) colorSelected else colorNotSelected,
                         contentColor = if (selectedButton == 1) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (selectedButton == 1) colorSelected else colorNotSelected,
+                            color = if (selectedButton == 1) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(80.dp)
                         .height(80.dp)
                 )
                 {
-                    Image(
+                    Image( // obrázok X
                         painter = painterResource(id = R.drawable.woodenx),
                         contentDescription = null,
                         modifier = Modifier
@@ -162,20 +168,20 @@ fun MultiplayerNewGameWindow(
                 Spacer(modifier = Modifier.width(15.dp))
 
                 Button(
-                    onClick = { selectedButton = 2 },
+                    onClick = { selectedButton = 2 },  // začína O = hráč 2
                     colors = ButtonColors(containerColor = if (selectedButton == 2) colorSelected else colorNotSelected,
                         contentColor = if (selectedButton == 2) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (selectedButton == 2) colorSelected else colorNotSelected,
+                            color = if (selectedButton == 2) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(80.dp)
                         .height(80.dp)
                 )
                 {
-                    Image(
+                    Image( // obrázok O
                         painter = painterResource(id = R.drawable.throwrings),
                         contentDescription = null,
                         modifier = Modifier
@@ -186,20 +192,20 @@ fun MultiplayerNewGameWindow(
                 Spacer(modifier = Modifier.width(15.dp))
 
                 Button(
-                    onClick = {  selectedButton = 3 },
+                    onClick = {  selectedButton = 3 }, // náhodný výber
                     colors = ButtonColors(containerColor = if (selectedButton == 3) colorSelected else colorNotSelected,
                         contentColor = if (selectedButton == 3) colorSelected else colorNotSelected, disabledContainerColor = colorNotSelected,
                         disabledContentColor = colorNotSelected),
                     modifier = Modifier
                         .background(
-                            color = if (selectedButton == 3) colorSelected else colorNotSelected,
+                            color = if (selectedButton == 3) colorSelected else colorNotSelected, // zmena farby na zobrazenie označenia výberu
                             shape = MaterialTheme.shapes.medium
                         )
                         .width(80.dp)
                         .height(80.dp)
                 )
                 {
-                    Image(
+                    Image( // obrázok X aj O
                         painter = painterResource(id = R.drawable.both),
                         contentDescription = null,
                         modifier = Modifier
@@ -215,7 +221,7 @@ fun MultiplayerNewGameWindow(
                     .padding(10.dp, 420.dp, 0.dp, 0.dp)
             )
             {
-                Button(
+                Button( // Ukončenie procesu tvorby hry a vrátenie sa na hlavnú obrazovku.
                     onClick = { onCancelButtonClicked() },
                     colors = ButtonColors(containerColor = colorResource(id = R.color.white),
                         contentColor = colorResource(id = R.color.white), disabledContainerColor = colorResource(id = R.color.white),
@@ -238,21 +244,21 @@ fun MultiplayerNewGameWindow(
 
                 Spacer(modifier = Modifier.width(20.dp))
 
-                Button(
+                Button( // Poslanie informácii cez inštanciu [GamePlay] na uloženie do inštancie [TTTState].
                     onClick = {
-                        if (p1Name != "" && p2Name != "" && selectedButton != 0)
+                        if (p1Name != "" && p2Name != "" && selectedButton != 0) // obidve mená musia byť dané a tlačidlo na výber hráča, ktorý začína prvý, musí byť označené
                         {
-                            gamePlay.resetGame()
-                            gamePlay.setPlayer1Name(p1Name)
-                            gamePlay.setPlayer2Name(p2Name)
-                            gamePlay.multiPlayerMode.value = true
+                            gamePlay.resetGame() // Obnovenie/vyčistenie hry
+                            gamePlay.setPlayer1Name(p1Name) // nastavenie mena hráča 1
+                            gamePlay.setPlayer2Name(p2Name) // nastavenie mena hráča 2
+                            gamePlay.multiPlayerMode.value = true // hra proti hráčovi
                             when (selectedButton)
                             {
-                                1 -> gamePlay.setPlayerTurn(1)
-                                2 -> gamePlay.setPlayerTurn(2)
-                                3 -> gamePlay.setPlayerTurn(0)
+                                1 -> gamePlay.setPlayerTurn(1) // začína hráč 1
+                                2 -> gamePlay.setPlayerTurn(2) // začína hráč 2
+                                3 -> gamePlay.setPlayerTurn(0) // náhodný výber
                             }
-                            onNextButtonClicked()
+                            onNextButtonClicked() // presun na hernú obrazovku
                         }
                     },
                     colors = ButtonColors(containerColor = colorResource(id = R.color.navy_blue),
