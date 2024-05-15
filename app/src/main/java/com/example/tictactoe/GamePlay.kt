@@ -486,7 +486,7 @@ class GamePlay(private val itemsRepository: ItemsRepository) : ViewModel()
      *    4 => vráti 3 - remíza
      *    0 => nikto ešte nevyhral
      */
-    private fun whoWon() : Int
+    fun whoWon() : Int
     {
         when(checkGameOver())
         {

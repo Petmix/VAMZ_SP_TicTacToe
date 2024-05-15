@@ -1,5 +1,6 @@
 package com.example.tictactoe
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -169,6 +171,9 @@ fun Header(gamePlay: GamePlay)
 fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
 {
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    var alreadyShown = false // kontrola notifikácie
+
     val xImage = painterResource(id = R.drawable.woodenx)
     val oImage = painterResource(id = R.drawable.throwrings)
     val nImage = painterResource(id = R.drawable.emptyimage)
@@ -241,6 +246,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a1.floatValue // Zobrazenie alebo zmiznutie obrázku
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown) // zobrazenie notifikácie
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
@@ -296,6 +308,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a2.floatValue
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = false
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
@@ -350,6 +369,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         modifier = if (gamePlay.moves[2] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
                         alpha = a3.floatValue
                     )
+                }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -407,6 +433,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a4.floatValue
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
@@ -462,6 +495,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a5.floatValue
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
@@ -516,6 +556,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         modifier = if (gamePlay.moves[5] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
                         alpha = a6.floatValue
                     )
+                }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -573,6 +620,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a7.floatValue
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
 
             Spacer(modifier = Modifier.width(30.dp))
@@ -627,6 +681,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         modifier = if (gamePlay.moves[7] == false) Modifier.scale(1.8f, 1.8f) else Modifier.scale(1.6f, 1.6f),
                         alpha = a8.floatValue
                     )
+                }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -683,6 +744,13 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         alpha = a9.floatValue
                     )
                 }
+
+                if (gamePlay.gameOver.value && !alreadyShown)
+                {
+                    alreadyShown = true
+                    val won = gamePlay.whoWon()
+                    Toast.makeText(context, if (won == 1) "Player 1 has won!" else if (won == 2) "Player 2 has won!" else "It's a tie!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -699,6 +767,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                         gamePlay.addNumOfGamesPlayed() // Zvýš počet hier o 1 ak je koniec hry
                     }
                     if (gamePlay.multiPlayerMode.value) gamePlay.saveToDatabase(coroutineScope) // Ulož dáta do databázy
+                    alreadyShown = false
                     onGameEnd() // Vráť sa na hlavnú obrázovku
                 },
                 colors = ButtonColors(
@@ -729,6 +798,7 @@ fun Board(gamePlay: GamePlay, onGameEnd: () -> Unit)
                 onClick = {
                     if (gamePlay.gameOver.value) // Iba ak je hra ukončená - niekto vyhral alebo je remíza
                     {
+                        alreadyShown = false
                         gamePlay.playAgain() // Spusti hru znova - resetuje ťahy
                         a1.floatValue = 0.0f // Schová obrázky
                         a2.floatValue = 0.0f
